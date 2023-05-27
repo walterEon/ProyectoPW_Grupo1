@@ -1,0 +1,52 @@
+.padre{
+    width: 100%;
+    margin: 10px;
+}
+
+.contenedor{
+    
+    display:grid;
+}
+
+.titulo{
+    margin-top: 10px;
+    display: block;
+}
+
+p{
+    margin: 0px;
+}
+
+.boton{
+    float: right;
+    background-color: #BB6ECE;
+    border-color: #BB6ECE;
+    border-radius: 30px;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.boton:hover{
+    background-color: white;
+    border-color: #BB6ECE;
+    color: black
+}
+
+.caja{
+    border-color: #BB6ECE;
+    border-width: 2px;
+    height: 150px;
+    resize: none;
+
+}
+
+.caja:focus-visible{
+    border-color: #BB6ECE;
+    box-shadow: none;
+}
+
+.caja:focus{
+    border-color: #BB6ECE;
+}
+
