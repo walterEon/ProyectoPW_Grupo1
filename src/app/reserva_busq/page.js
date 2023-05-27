@@ -91,7 +91,7 @@ const reserva_busq = () => {
                         </div>
 
                         {opcion === 'nombre' && (
-                            <Form onSubmit={handleSubmit} className="formNombre">
+                            <Form className="formNombre">
                                 <Form.Group controlId="nombre">
                                     <Form.Control
                                     type="text"
@@ -104,7 +104,7 @@ const reserva_busq = () => {
                         )}
 
                         {opcion === 'fecha' && (
-                                <Form onSubmit={handleSubmit} className="formFecha">
+                                <Form className="formFecha">
                                     <Form.Group controlId="fecha">
                                         <Form.Control
                                         type="date"

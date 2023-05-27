@@ -21,7 +21,7 @@ export default function Sidebar(props) {
 
       
     useEffect(() => {
-        
+        filtrarFecha()
         let savedItem = localStorage.getItem("sesion");
         if(savedItem == undefined){
             router.push('/')
