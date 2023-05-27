@@ -1,0 +1,25 @@
+.contenido{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #BB6ECE;
+}
+
+.title{
+    color: #BB6ECE;
+}
+.sincita{
+    text-align: center;
+}
+
+.elemento{
+    text-align: justify;
+    padding-left: 0rem;
+    list-style-type: none;
+    color: gray
+}

@@ -1,0 +1,32 @@
+.carta{
+    margin: 10px;
+}
+
+.profesor{
+    display: flex;
+}
+
+.foto{
+     max-width: 30px;
+     max-height: 30px;
+     margin-right: 10px;
+     margin-top: 10px;
+}
+
+.calificacion{
+    display: flex;
+}
+
+.boton{
+    margin-left: 100px;
+    background-color: white;
+    border-color: #BB6ECE;
+    border-radius: 30px;
+    color: black;
+    float: right;
+}
+
+.boton:hover{
+    background-color: #BB6ECE;
+    border-color: #BB6ECE;
+}
