@@ -1,0 +1,118 @@
+.contenedor{
+    margin: 16px;
+    width: 100%;
+}
+
+.busq{
+    width: 100%;
+    display: flex;
+}
+
+hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.barra{
+    height: 50px;
+    width: 100%;
+    border:2px solid #6c25be;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+h6{
+    width:66px;
+    margin-top:-8.9px;
+    margin-left:13.5px;
+    background:white;
+    color: #905ec9;
+    font-size: 13.5px;
+}
+
+.form{
+    margin-left: 55px;
+    margin-right: 10px;
+    display: flex;
+}
+
+.cajaBusqN{
+    border: none;
+    font-size: 15px;
+    height: 17px;
+}
+
+.cajaBusqF{
+    border: none;
+    font-size: 15px;
+    height: 17px;
+}
+
+.cajaBusqN:focus-visible{
+    box-shadow: none;
+}
+
+.cajaBusqF:focus-visible{
+    box-shadow: none;
+}
+
+.formNombre{
+    width: 100%;
+}
+
+.formFecha{
+    width: 100%;
+}
+
+.botones{
+    width: 30%;
+    padding-top: 14px;
+    padding-left: 20px;
+}
+
+.botonN{
+    border-top-right-radius: 0%;
+    border-bottom-right-radius: 0%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border: 1px solid black;
+    width: 140px;
+    height: 42px;
+    
+}
+
+.botonN:hover{
+    border: 1px solid;
+}
+
+.botonF{
+    border-top-left-radius: 0%;
+    border-bottom-left-radius: 0%;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border: 1px solid black;
+    width: 140px;
+    height: 42px;
+}
+
+.botonF:hover{
+    border: 1px solid;
+}
+
+.descripcion{
+    padding-left: 18px;
+    padding-bottom: 20px;
+}
+
+.info{
+    font-size: 12px;
+    color: #706d75;
+}
+
+.profes{
+    display: flex;
+}
+
+
+
+

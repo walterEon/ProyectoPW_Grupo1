@@ -1,0 +1,40 @@
+.cont{
+    display: flex;
+    background-color:#fef7ff;
+    padding: 0 25px;
+    height: 90px;
+    width: 350px;
+    font-size: 16px;
+    border-radius: 10px;
+    margin: 15px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+
+.txts{
+    padding-top: 10px;
+    padding-left: 0px;
+    width: 250px;
+}
+
+.nombre{
+    display: inline;
+    font-weight: bold;
+    padding-left: 0px;
+    padding-top: 20px;
+    color: black;
+}
+
+.universidad-carrera{
+    padding-top: 10px;
+    padding-bottom: 30px;
+    font-size: 13.5px;
+    text-align: justify;
+    color: gray ;
+}
+
+.enlace{
+    padding-top: 33px;
+    padding-left: 20px;
+}
