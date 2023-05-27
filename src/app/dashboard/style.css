@@ -1,0 +1,33 @@
+.encabezado{
+    display: flex;
+    width: 100%;
+}
+
+h4{
+    width: 85%;
+}
+
+hr{
+    margin-top: 0px; 
+}
+
+.boton{
+    margin-bottom: 5px;
+    
+    float: right;
+    
+}
+
+.calificaciones{
+    background-color:#BB6ECE;
+    border-color: #BB6ECE;
+    border-radius: 20px;
+    color: white;
+}
+
+.calificaciones:hover{
+    background-color: white;
+    color:#BB6ECE;
+    border-color: #BB6ECE;
+}
+

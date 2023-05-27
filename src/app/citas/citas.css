@@ -1,0 +1,131 @@
+.contenedorPrincipal{
+    margin: 15px;
+}
+
+.informacionProfesor{
+    background-color: #fef7ff;
+    border-radius: 30px;
+}
+
+.infoProfe{
+    display: flex;
+    padding-top: 10px;
+}
+
+.presentacion{
+    display: flex;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.listaCursos{
+    display: flex;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin-top: 15px;
+    padding-bottom: 10px;
+}
+
+.ingresarFecha{
+    width:88px;
+    margin-top:-6px;
+    margin-left:13.5px;
+    background:white;
+    color: #905ec9;
+    font-size: 10px;
+}
+
+.ingresarCurso{
+    width:80px;
+    margin-top:-7px;
+    margin-left:13.5px;
+    background:white;
+    color: #905ec9;
+    font-size: 10px;
+}
+
+.formFecha{
+    height: 45px;
+    width: 20%;
+    border:2px solid #6c25be;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.formCurso{
+    height: 45px;
+    width: 25%;
+    border:2px solid #6c25be;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.cursoElegir{
+    border: none;
+    font-size: 15px;
+    height: 15px;
+}
+
+.curso:focus-visible{
+    box-shadow: none;
+}
+
+.fechaElegir{
+    border: none;
+    font-size: 15px;
+    height: 15px;
+}
+
+.fechaElegir:focus-visible{
+    box-shadow: none;
+}
+
+.descripcion{
+    padding-left: 25px;
+}
+
+.info{
+    font-size: 12px;
+    color: #706d75;
+    margin-bottom: 30px;
+}
+
+.rellenar{
+    display: flex;
+}
+
+.horarios{
+    margin-top: 10px;
+    display: flex;
+}
+
+.detalle{
+    margin-top: 8.5px;
+}
+
+
+
+
+.button{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.contenedorsito{
+    padding-right: 25px;
+}
+
+.cont{
+    padding-left: 20px;
+}
+
+.text-justify{
+    text-align: justify;
+}
+
+.Contenedor2{
+    padding-left: 15px;
+    margin-top: 10px;
+}
