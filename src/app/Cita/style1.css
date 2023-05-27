@@ -1,0 +1,58 @@
+.cuerpo{
+    width: 100%;
+    margin: 10px;
+}
+
+
+.titulo{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+    float: left;
+}
+
+
+.programar{
+    margin-top: 10px;
+    float: right ;
+    background-color:#BB6ECE;
+    border-color: #BB6ECE;
+    border-radius: 30px;
+    color: white;
+}
+
+.programar:hover{
+    background-color: white;
+    color:#BB6ECE;
+    border-color: #BB6ECE;
+}
+
+.programar:active{
+    background-color:#BB6ECE;
+}
+
+hr{
+    size: 3px;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+.programar2{
+    margin-top: 3px;
+    float: right ;
+    background-color:white;
+    border-color: #BB6ECE;
+    border-radius: 30px;
+    color: #BB6ECE;
+}
+
+.programar2:hover{
+    background-color:#BB6ECE;
+    color:white;
+    border-color: #BB6ECE;
+}
+
+.cards{
+    display: flex;
+}
