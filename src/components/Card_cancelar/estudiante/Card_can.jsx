@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import React, { useState } from 'react';
 import '../estudiante/style.css'
 
-const Can = ({ nomEest, especialidad, fecha, curso, onDelete }) => {
+const Can = ({ nomEst, especialidad, fecha, curso, onDelete }) => {
   const [isDeleted, setIsDeleted] = useState(false);
 
   const handleDelete = () => {
@@ -21,7 +21,7 @@ const Can = ({ nomEest, especialidad, fecha, curso, onDelete }) => {
       <Card.Header className="profesor">
         <Card.Img className="foto" src="https://lh3.googleusercontent.com/a/AAcHTtceq_PyTlIHE_JS-KNtUQYjtwW6rLP4CLczKxrjuQ=s83-c-mo" />
         <div>
-          <h5>{nomEest}</h5>
+          <h5>{nomEst}</h5>
           <span>{especialidad}</span>
         </div>
       </Card.Header>

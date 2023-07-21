@@ -1,43 +1,77 @@
 'use client';
 import Cancelar from '../../components/Card_cancelar/profe/Card_cancelar.jsx'
+import Cancelar2 from '../../components/Card_cancelar/estudiante/Card_can.jsx'
 import '../Cita/style1.css'
 import Button from 'react-bootstrap/Button'
 import React from 'react';
 import CitasApi from '../../api/citas.js';
+import PersonasApi from '../../api/personas.js';
+import CursosApi from '../../api/cursos.js';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 
 const Cita = () => {
     const fechaSistema = new Date();
-    const [citasOriginal, setCitasOriginal] = useState(citas);
+    const [citasOriginal, setCitasOriginal] = useState([]);
     const [citasFiltrado, setCitasFiltrado] = useState([]);
-    const [numeroCitas, setNumeroCitas] = useState(citas.length);
+    const [numeroCitas, setNumeroCitas] = useState(0);
+    const [usuarios, setUsuarios ] = useState([]);
+    const [sesion , setSesion] = useState({});
+    const [cursos, setCursos ] = useState([]);
 
-    const filtrarFecha = () =>{
-        const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) >= fechaSistema));
-        setCitasFiltrado(citasFiltradas)
+ 
+
+    const filtrarFecha =  async () =>{
+        if(sesion.idRol == 1){
+            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
+            setCitasFiltrado(citasFiltradas)
+        }else{
+            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
+            setCitasFiltrado(citasFiltradas)
+        }
         
 
-      };
+    };
+
+    const handleOnLoad = async () => {
+        const result = await CitasApi.findAll();
+        setCitasOriginal(result.data);
+        const result2 = await PersonasApi.findAll();
+        setUsuarios(result2.data);
+        const result3 = await CursosApi.findAll();
+        setCursos(result3.data);
+    }
 
       useEffect(()=>{
-        filtrarFecha()
+        handleOnLoad();
+        filtrarFecha();
+        let sesionGuardada = localStorage.getItem("sesion");
+        if(sesionGuardada == undefined){
+            router.push('/')
+        }
+        setSesion(JSON.parse(sesionGuardada))
+        setNumeroCitas(citasOriginal.length)
+
     },[])
 
-    const handleDeleteCard = (elem) => {
-        if(numeroCitas=== citas.length){
-            const nuevaCitasFiltrado = citasFiltrado.filter(item => item.id == elem.id);
+    const handleDeleteCard =  async (elem) => {
+        if(numeroCitas=== citasOriginal.length){
+            const nuevaCitasFiltrado = citasFiltrado.filter(item => item.idCita == elem.idCita);
             setCitasFiltrado(nuevaCitasFiltrado);
-            setNumeroCitas(numeroCitas-1-(citas.length-citasFiltrado.length));
+            setNumeroCitas(numeroCitas-1-(citasOriginal.length-citasFiltrado.length));
             console.log(citasFiltrado.length)
             console.log(numeroCitas)
         }else{
-            const nuevaCitasFiltrado = citasFiltrado.filter(item => item.id == elem.id);
+            const nuevaCitasFiltrado = citasFiltrado.filter(item => item.idCita == elem.idCita);
             setCitasFiltrado(nuevaCitasFiltrado);
             setNumeroCitas(numeroCitas-1);
             console.log(citasFiltrado.length)
             console.log(numeroCitas)
         }
+        const result = await CitasApi.remove(elem.idCita);
+           
+        handleOnLoad();
+
         
         
       };
@@ -70,7 +104,7 @@ const Cita = () => {
                         <br></br>
                         <br></br>
 
-                        {numeroCitas === 0  || citasFiltrado.length === 0 ?
+                        {numeroCitas === 0  || citasFiltrado.length === 0 ? 
 
                         (<div className="text-center">
                             <div className="p-5">
@@ -83,17 +117,39 @@ const Cita = () => {
                             </div>
                         </div>)
                         :
+                        (sesion.idRol == 1 ?
+                        
                         (<div className='cards'>
                             
                         {citasFiltrado.map(elem => (
-                            <Cancelar  nombreprof={elem.nombreprof} especialidad={elem.especialidad} fecha={elem.fecha} 
-                            curso={elem.curso} onDelete={() => handleDeleteCard(elem)}/>
+                            <Cancelar  
+                            nombreprof={(usuarios.find((e) => e.idPersona == elem.idPersonaDocente).nombre)+' '+ (usuarios.find((e) => e.idPersona == elem.idPersonaDocente).apellido)}
+                            especialidad={(usuarios.find((e) => e.idPersona == elem.idPersonaDocente).tituloPresentacion)} 
+                            fecha={elem.fecha} 
+                            curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
+                            onDelete={() => handleDeleteCard(elem)}
+                            />
                         ))
                         }
                         </div>)
-
+                        :
+                          
+                        (<div className='cards'>
+                            
+                        {citasFiltrado.map(elem => (
+                            <Cancelar2  
+                            nomEst={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).nombre)+' '+ (usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).apellido)}
+                            especialidad={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).tituloPresentacion)} 
+                            fecha={elem.fecha} 
+                            curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
+                            onDelete={() => handleDeleteCard(elem)}
+                            />
+                        ))
                         }
-            
+                        </div>)
+                        )
+                        }
+                    
                     </div>
                 )
             }

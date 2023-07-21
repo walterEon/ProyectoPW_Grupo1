@@ -23,7 +23,7 @@ export default function Dashboard() {
 
     
     const fechaSistema = new Date();
-
+ 
 
     const filtrarFecha =  async () =>{
         if(sesion.idRol == 1){
@@ -78,14 +78,14 @@ export default function Dashboard() {
                     <div className="card-header d-flex justify-content-between">
                         <label> Próximas citas </label>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body"> 
                     {
                                 (citasFiltrado.length > 0) &&
                                     citasFiltrado?.map(item =>(
                                     <div className="card mb-2" style={{maxWidth: `650px` , minWidth: `300px`}}>
                                         <div className="row mx-0">
                                             <div className="col-auto d-flex align-items-center px-3">
-                                                <div className={styles.cardLetra}> {sesion.idRol  == 2 ? obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaAlumno).nombre) : obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaDocente).nombre)} </div>
+                                                <div className={styles.cardLetra}>  {sesion.idRol  == 2 ? obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaAlumno).nombre) : obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaDocente).nombre)} </div>
                                             </div>
                                             <div className="col px-0">
                                                 <div className="card-body px-0">
