@@ -14,14 +14,20 @@ import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
+import ModalUniversidad from './universidadAddComp';
+import ModalCarrera from './carreraAddComp';
+import ModalCurso from './cursoAddComp';
 
 import CarrerasApi from '../../api/carreras.js'
 import UniversidadesApi from '../../api/universidades.js'
+import PersonasApi from '../../api/personas.js'
+import CursosApi from '../../api/cursos.js'
 
 export default function Dashboard() {
     const [usuarios, setUsuarios ] = useState([]);
     const [carreras, setCarreras ] = useState([]);
     const [universidades, setUniversidades ] = useState([]);
+    const [cursos, setCursos] = useState([]);
     const [sesion , setSesion] = useState({});
     const router = useRouter();
 
@@ -71,9 +77,9 @@ export default function Dashboard() {
         setRol(dataSesion.idRol)
         setDoc_numero(dataSesion.DNI)
         setUsuario(dataSesion.email)
-        setUniversidad(dataSesion.universidad)
-        setCarrera(dataSesion.carrera)
-        setTitulo(dataSesion.titulo)
+        setUniversidad(dataSesion.idUniversidad) // no se obtiene
+        setCarrera(dataSesion.idCarrera) // no se obtiene
+        setTitulo(dataSesion.tituloPresentacion)
         setPresentacion(dataSesion.presentacion)
         setCursoSeleccionado(dataSesion.cursos)
         setImagen(dataSesion.imagen || '')
@@ -103,15 +109,15 @@ export default function Dashboard() {
             };
         });
       };
-    const submitForm = (event) => {
+    const submitForm = async (event) => {
         event.preventDefault();
 
-        if( usuarios.find(e => e.user == usuario && e.id != sesion.id ) ){
+        if( usuarios.find(e => e.email == usuario && e.idPersona != sesion.idPersona ) ){
             alert( 'Ese usuario ya existe' );
             return;
         }
         if( password != '' ){
-            if(usuarios.find(e => e.user == usuario && e.password == password ) ){
+            if(usuarios.find(e => e.email == usuario && e.password == password ) ){
                 if(new_password != check_password){
                     alert( 'Las contraseñas no coinciden' );
                     return;
@@ -121,11 +127,13 @@ export default function Dashboard() {
                 return;
                 }
         }
+        var usuarioCambio = usuarios.find(e => e.idPersona == sesion.idPersona)
+        console.log(usuarioCambio)
+        
+        usuarioCambio.password = new_password;
 
-        var u = usuarios;
-        var indexSesion = u.findIndex(object => {
-            return object.id === sesion.id;
-        })
+        const result = await PersonasApi.update(usuarioCambio);
+        /*
         var pwd = password != '' ? new_password : sesion.password;
         var newSesion = { 
             id : sesion.id , user : usuario , password: pwd, 
@@ -134,43 +142,15 @@ export default function Dashboard() {
             rol : rol , doc_tipo : doc_tipo , doc_numero : doc_numero,
             universidad : universidad, carrera : carrera, cursos : cursoSeleccionado,
             titulo: titulo, presentacion : presentacion, grado : (rol == 'docente' ? grado : '')
-        }
+        } 
         u.splice(indexSesion, 1, newSesion)
         localStorage.setItem('usuarios', JSON.stringify(u))
         localStorage.setItem('sesion', JSON.stringify(newSesion))
         location.reload();
+        */
     }
     
-    const setObjItems = () => {
-        const items = JSON.parse(localStorage.getItem('usuarios'));
-        if (items) {
-            setUsuarios(items);
-        }else{
-            var users = [
-                { id : 1 , user : 'admin' , password: 'admin', nombres : 'Admin' , rol : 'admin', apellidos : '' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 2 , user : 'profesor' , password: 'profesor', nombres : 'Profesor Pruebas' , rol : 'docente', apellidos : '' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 3 , user : 'alumno1' , password: 'alumno1', nombres : 'Alumno 1' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 4 , user : 'alumno2' , password: 'alumno2', nombres : 'Alumno 2' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 5 , user : 'alumno3' , password: 'alumno3', nombres : 'Alumno 3' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                }
-            ]
-            localStorage.setItem('usuarios', JSON.stringify(users))
-        }
-    }
+    
     const setObjUniversidades = () => {
         var universidades = JSON.parse(localStorage.getItem('universidades'));
         if (universidades) {
@@ -195,9 +175,32 @@ export default function Dashboard() {
         setCarreras(result.data);
         const result2 = await UniversidadesApi.findAll();
         setUniversidades(result2.data);
+        const result3 = await PersonasApi.findAll();
+        setUsuarios(result3.data);
+        const result4 = await CursosApi.findAll();
+        setCursos(result4.data);
         console.log(carreras)
+
         console.log(universidades)
     }
+
+    /*const filtrarCarreras = async () => {
+        const result = await CarrerasApi.findAll();
+        
+        const filtered =result.data.filter(x => x.idUniversidad == (universidades.find((e) => e.idUniversidad == item.idPersonaAlumno).nombre))
+    }*/
+
+    const handleReturnProfesion = async (idProfesion) =>{
+        const result = await profesionesApi.findOne(idProfesion);
+        const respuesta = result ?? null;
+        if (respuesta){
+            return respuesta.data.name;
+        }
+        else{
+            return " ";
+        }
+    }
+
 
     useEffect(() => {
         handleOnLoad()
@@ -207,8 +210,6 @@ export default function Dashboard() {
         }
         setSesion(JSON.parse(sesionGuardada))
         setData(JSON.parse(sesionGuardada));
-
-        setObjItems();
         setObjUniversidades();
         setObjCarreras();
         setObjCursos();
@@ -325,7 +326,7 @@ export default function Dashboard() {
                                         <div className="col-md-6">
                                             <label htmlFor="inputPassword" className="form-label">Contraseña Actual</label>
                                             <input type="password" className="form-control" id="inputPassword"
-                                                value={ password } 
+                                                value={ sesion.password } 
                                                 onChange={e => setPassword(e.target.value)}
                                             />
                                         </div>
@@ -359,14 +360,20 @@ export default function Dashboard() {
                                                         <FontAwesomeIcon icon={faPlus} />
                                                     </button>
                                                 </div>
-                                                <Select 
-                                                    noOptionsMessage={ () => 'Sin opciones' }
-                                                    placeholder=""
-                                                    value={universidad}
-                                                    isClearable 
-                                                    options={optUniversidades}
-                                                    onChange={e => setUniversidad(e)}
-                                                />
+                                    
+                                                <select type="text" className="form-select" id="inputUniversidad" 
+                                                    value={universidad } 
+                                                    onChange={e => setUniversidad(e.target.value)}
+                                                >{universidades.map((item, index)=>{
+                                                    return(
+                                                        <option value="uni">{item.descripcion}</option>
+    
+                                                    )
+                                                })
+                                                    
+                                                }
+                                                    
+                                                </select>
                                                 <ModalUniversidad callback={setObjUniversidades} />
                                             </div>
                                             <div className="">
@@ -376,13 +383,17 @@ export default function Dashboard() {
                                                         <FontAwesomeIcon icon={faPlus} />
                                                     </button>
                                                 </div>
-                                                <Select 
-                                                    noOptionsMessage={ () => 'Sin opciones' }
-                                                    placeholder=""
-                                                    value={carrera}
-                                                    isClearable options={optCarreras}
-                                                    onChange={e => setCarrera(e)}
-                                                />
+                                                <select type="text" className="form-select" id="inputCarrera" 
+                                                    value={carrera } 
+                                                    onChange={e => setCarrera(e.target.value)}
+                                                >{carreras.map((item, index)=>{
+                                                    return(
+                                                        <option value="carr">{item.nombre}</option>
+    
+                                                    )
+                                                })
+                                                    
+                                                }</select>
                                                 <ModalCarrera callback={setObjCarreras} />
                                             </div>
                                         </div>
@@ -394,18 +405,17 @@ export default function Dashboard() {
                                                         <FontAwesomeIcon icon={faPlus} />
                                                     </button>
                                                 </div>
-                                                <Select 
-                                                    isMulti
-                                                    name="cursos"
-                                                    options={optCursos}
-                                                    className="basic-multi-select"
-                                                    classNamePrefix="select"
-                                                    noOptionsMessage={ () => 'Sin opciones' }
-                                                    placeholder=""
-                                                    value={cursoSeleccionado}
-                                                    onChange={e => setCursoSeleccionado(e)}
-                                                    defaultValue="{cursoSeleccionado}"
-                                                />
+                                                <select type="text" className="form-select" id="inputCurso" 
+                                                    
+                                                    onChange={e => setCarrera(e.target.value)}
+                                                >{cursos.map((item, index)=>{
+                                                    return(
+                                                        <option value="carr">{item.nombre}</option>
+    
+                                                    )
+                                                })
+                                                    
+                                                }</select>
                                                 <ModalCurso callback={setObjCursos} />
                                             </div>
                                             { rol == 'docente' &&
@@ -439,7 +449,7 @@ export default function Dashboard() {
                                     <div className="mb-3">
                                         <label htmlFor="inputPresentacion" className="form-label">Presentacion</label>
                                             
-                                        <textarea className="form-control" id="inputPresentacion" style={{resize:'none', height:'50px'}} defaultValue={presentacion} onChange={e => setPresentacion(e.target.value)} ></textarea>
+                                        <textarea className="form-control" id="inputPresentacion" style={{resize:'none', height:'50px'}}value={ presentacion}  onChange={e => setPresentacion(e.target.value)} ></textarea>
                                     </div>
                                 </div>
                             )}

@@ -1,44 +1,32 @@
 'use client';
 import Link from 'next/link';
 import styles from '../page.module.css'
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons'
 import { useState , useEffect } from 'react'
 import { useRouter } from 'next/navigation';
+import CursosApi from '../../api/cursos.js';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
-import ModalCurso from '../perfil/cursoAddComp';
 
 export default function Dashboard() {
     const router = useRouter();
-    const [cursos, setCursos ] = useState([]); 
+    const [cursos, setCurso ] = useState([]);
+
+    const handleOnLoad = async () => {
+
+        const result = await CursosApi.findAll();
+        setCurso(result.data);
+        console.log(cursos)
+    }
 
     useEffect(() => {
-        require("bootstrap/dist/js/bootstrap.bundle.min.js");
-        setObjCursos();
+        handleOnLoad();
     }, [])
 
-    const setObjCursos = () => {
-        var cursos = JSON.parse(localStorage.getItem('cursos'));
-        if (cursos) {
-            setCursos(cursos);
-        }
-    }
-    const borrar = (index, name = '') => {
-        if(confirm( `Desea eliminar el Curso "${name}"` )){
-            cursos.splice(index, 1)
-            localStorage.setItem('cursos', JSON.stringify(cursos))
-            setObjCursos();
-        }
-    }
+    
     return (
         <div className={`px-3 col`}>
             <div className='pt-3'>
                 <div className="card-header d-flex justify-content-between">
                     <h4> Cursos </h4>
-                    <button type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCurso">
-                        <FontAwesomeIcon icon={faPlus} />
-                    </button>
                 </div>
                 <hr></hr>
                 <div className="card mb-3" style={{backgroundColor: `#f3edf7` , minHeight: `50px`}}>
@@ -49,6 +37,7 @@ export default function Dashboard() {
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nombre</th>
+                                    <th scope="col">Carrera</th>
                                     <th scope="col" style={{ width: '50px' }}></th>
                                 </tr>
                             </thead>
@@ -57,13 +46,9 @@ export default function Dashboard() {
                                     cursos.map((item, index)=>{
                                         return (
                                             <tr key={index}>
-                                                <td> {item.value} </td>
-                                                <td> {item.label} </td>
-                                                <td> 
-                                                    <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => borrar( index, item.label ) } >
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </button>    
-                                                </td>
+                                                <td> {item.idCurso} </td>
+                                                <td> {item.nombre} </td>
+                                                <td> {item.carrera.nombre}</td>
                                             </tr>
                                         )
                                     })
@@ -78,7 +63,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-            <ModalCurso callback={setObjCursos} />
+            
         </div>
     )
 }
