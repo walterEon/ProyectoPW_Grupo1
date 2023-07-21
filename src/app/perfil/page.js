@@ -11,17 +11,13 @@ import CreatableSelect from 'react-select/creatable';
 
 import { useRouter } from 'next/navigation';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
-import ModalUniversidad from './universidadAddComp';
-import ModalCarrera from './carreraAddComp';
-import ModalCurso from './cursoAddComp';
+import ChipCursos from '../../components/Chip_Cursos/Chip_Cursos.jsx';
 
 import CarrerasApi from '../../api/carreras.js'
 import UniversidadesApi from '../../api/universidades.js'
 import PersonasApi from '../../api/personas.js'
 import CursosApi from '../../api/cursos.js'
+import PersonasCursosApi from '../../api/personascursos.js'
 
 export default function Dashboard() {
     const [usuarios, setUsuarios ] = useState([]);
@@ -29,6 +25,8 @@ export default function Dashboard() {
     const [universidades, setUniversidades ] = useState([]);
     const [cursos, setCursos] = useState([]);
     const [sesion , setSesion] = useState({});
+    const [cursosSelec, setCursosSelec] = useState([]);
+    const [personasCursos, setPersonasCursos ] = useState([]);
     const router = useRouter();
 
     const [nombres, setNombres] = useState('');
@@ -42,32 +40,34 @@ export default function Dashboard() {
     const [new_password , setNew_password] = useState('')
     const [check_password , setCheck_password] = useState('')
     const [universidad , setUniversidad] = useState('')
-    const [carrera , setCarrera] = useState('')
-    // const [cursos , setCursos] = useState('')
+    const [carrera , setCarrera] = useState(0)
+
 
     const [titulo , setTitulo] = useState('')
     const [presentacion , setPresentacion] = useState('')
     const [grado , setGrado] = useState('')
     
     const [tab , setTab] = useState('datos')
-    const [cursoSeleccionado , setCursoSeleccionado] = useState([])
+
 
     const [imagen , setImagen] = useState(undefined)
 
     const [selectedFile, setSelectedFile] = useState(undefined);
     
-    const [optCursos, setOptCursos] = useState([]);
-    const [optUniversidades, setOptUniversidades] = useState([]);
-    const [optCarreras, setOptCarreras] = useState([]);
 
-    function obtenerUniversidad(item){
-        const idCarrera = item.idCarrera
-        const carreraFiltrada = carreras.filter((e) => e.idCarrera == idCarrera)
-        console.log(carreraFiltrada)
-        const idUniversidad = carreraFiltrada[0].idUniversidad
-        const universidadFiltrada = universidades.filter((e) => e.idUniversidad == idUniversidad)
 
-        return universidadFiltrada[0].descripcion;
+
+
+    function filtrarCursosMatriculados(){
+        const personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
+
+        setPersonasCursos(personasCursosFiltrados)
+
+
+        const cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
+            
+
+        setCursosSelec(cursosFiltrados);
     }
 
     const setData = ( dataSesion ) => {
@@ -77,17 +77,13 @@ export default function Dashboard() {
         setRol(dataSesion.idRol)
         setDoc_numero(dataSesion.DNI)
         setUsuario(dataSesion.email)
-        setUniversidad(dataSesion.idUniversidad) // no se obtiene
+        setUniversidad(dataSesion.carrera.idUniversidad) // no se obtiene
         setCarrera(dataSesion.idCarrera) // no se obtiene
         setTitulo(dataSesion.tituloPresentacion)
         setPresentacion(dataSesion.presentacion)
-        setCursoSeleccionado(dataSesion.cursos)
         setImagen(dataSesion.imagen || '')
-        if(dataSesion.rol == 'docente'){
-            setGrado(dataSesion.grado)
-        }else{
-            setGrado('')
-        }
+        setGrado(dataSesion.grado)
+        
     }
     const imagenUpload = async (event) => {
         event.preventDefault();
@@ -122,53 +118,37 @@ export default function Dashboard() {
                     alert( 'Las contraseñas no coinciden' );
                     return;
                 }
-                }else{
-                    alert( 'Contraseña incorrecta, no se pudo actualizar' );
+            }else{
+                alert( 'Contraseña incorrecta, no se pudo actualizar' );
                 return;
-                }
+            }
         }
-        var usuarioCambio = usuarios.find(e => e.idPersona == sesion.idPersona)
-        console.log(usuarioCambio)
         
-        usuarioCambio.password = new_password;
+        var usuarioCambio = usuarios.find(e => e.idPersona == sesion.idPersona)
+        if(new_password == ''){
+            usuarioCambio.password = password;
+        }else{
+            usuarioCambio.password = new_password;
+        }
+        
+        usuarioCambio.nombre = nombres;
+        usuarioCambio.apellido = apellidos;
+        usuarioCambio.tipoDocumento = doc_tipo;
+        usuarioCambio.DNI = doc_numero;
+        usuarioCambio.idRol = rol;
+        usuarioCambio.email = usuario;
+        usuarioCambio.idCarrera = carrera;
+        usuarioCambio.tituloPresentacion = titulo;
+        usuarioCambio.presentacion = presentacion;
+        usuarioCambio.grado = grado;
+        
 
         const result = await PersonasApi.update(usuarioCambio);
-        /*
-        var pwd = password != '' ? new_password : sesion.password;
-        var newSesion = { 
-            id : sesion.id , user : usuario , password: pwd, 
-            nombres : nombres , apellidos : apellidos , 
-            imagen: imagen,
-            rol : rol , doc_tipo : doc_tipo , doc_numero : doc_numero,
-            universidad : universidad, carrera : carrera, cursos : cursoSeleccionado,
-            titulo: titulo, presentacion : presentacion, grado : (rol == 'docente' ? grado : '')
-        } 
-        u.splice(indexSesion, 1, newSesion)
-        localStorage.setItem('usuarios', JSON.stringify(u))
-        localStorage.setItem('sesion', JSON.stringify(newSesion))
-        location.reload();
-        */
+    
     }
     
     
-    const setObjUniversidades = () => {
-        var universidades = JSON.parse(localStorage.getItem('universidades'));
-        if (universidades) {
-            setOptUniversidades(universidades);
-        }
-    }
-    const setObjCarreras = () => {
-        var carreras = JSON.parse(localStorage.getItem('carreras'));
-        if (carreras) {
-            setOptCarreras(carreras);
-        }
-    }
-    const setObjCursos = () => {
-        var cursos = JSON.parse(localStorage.getItem('cursos'));
-        if (cursos) {
-            setOptCursos(cursos);
-        }
-    }
+  
 
     const handleOnLoad = async () => {
         const result = await CarrerasApi.findAll();
@@ -179,27 +159,11 @@ export default function Dashboard() {
         setUsuarios(result3.data);
         const result4 = await CursosApi.findAll();
         setCursos(result4.data);
-        console.log(carreras)
-
-        console.log(universidades)
+        const result5 = await PersonasCursosApi.findAll();
+        setPersonasCursos(result5.data);
+ 
     }
 
-    /*const filtrarCarreras = async () => {
-        const result = await CarrerasApi.findAll();
-        
-        const filtered =result.data.filter(x => x.idUniversidad == (universidades.find((e) => e.idUniversidad == item.idPersonaAlumno).nombre))
-    }*/
-
-    const handleReturnProfesion = async (idProfesion) =>{
-        const result = await profesionesApi.findOne(idProfesion);
-        const respuesta = result ?? null;
-        if (respuesta){
-            return respuesta.data.name;
-        }
-        else{
-            return " ";
-        }
-    }
 
 
     useEffect(() => {
@@ -210,9 +174,8 @@ export default function Dashboard() {
         }
         setSesion(JSON.parse(sesionGuardada))
         setData(JSON.parse(sesionGuardada));
-        setObjUniversidades();
-        setObjCarreras();
-        setObjCursos();
+        filtrarCursosMatriculados();
+
         
     }, []);
    
@@ -251,8 +214,9 @@ export default function Dashboard() {
                                         onChange={e => setDoc_tipo(e.target.value)}
                                         required
                                     >
-                                        <option value="dni">DNI</option>
-                                        <option value="pasaporte">Pasaporte</option> 
+                                        <option value="DNI">DNI</option>
+                                        <option value="Pasaporte">Pasaporte</option> 
+                                        
                                     </select>
                                 </div>
                               
@@ -270,8 +234,8 @@ export default function Dashboard() {
                                         onChange={e => setRol(e.target.value)}
                                         required
                                     >
-                                        <option value="alumno">Alumno</option>
-                                        <option value="docente">Docente</option>
+                                        <option value={1}>Alumno</option>
+                                        <option value={2}>Docente</option>
                                     </select>
                                 </div>
                             </div>
@@ -282,11 +246,11 @@ export default function Dashboard() {
                                     </div>
                                     <div className="py-3">
                                         <label htmlFor="inputFile" className="form-label">Subir Imagen</label>
-                                        {/* <textarea className="form-control" id="inputImagen"
+                                        {<textarea className="form-control" id="inputImagen"
                                             value={ imagen }
                                             onChange={e => setImagen(e.target.value)}
                                         > 
-                                        </textarea> */}
+                                        </textarea>}
                                         <input
                                             className="form-control" id="inputFile"
                                             type="file"
@@ -356,9 +320,7 @@ export default function Dashboard() {
                                             <div className="mb-3">
                                                 <div className="d-flex justify-content-between pb-1">
                                                     <label htmlFor="inputUniversidad" className="form-label">Universidad</label>
-                                                    <button type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalUniversidad">
-                                                        <FontAwesomeIcon icon={faPlus} />
-                                                    </button>
+                                                    
                                                 </div>
                                     
                                                 <select type="text" className="form-select" id="inputUniversidad" 
@@ -366,7 +328,7 @@ export default function Dashboard() {
                                                     onChange={e => setUniversidad(e.target.value)}
                                                 >{universidades.map((item, index)=>{
                                                     return(
-                                                        <option value="uni">{item.descripcion}</option>
+                                                        <option value={item.idUniversidad}>{item.descripcion}</option>
     
                                                     )
                                                 })
@@ -374,36 +336,30 @@ export default function Dashboard() {
                                                 }
                                                     
                                                 </select>
-                                                <ModalUniversidad callback={setObjUniversidades} />
                                             </div>
                                             <div className="">
                                                 <div className="d-flex justify-content-between pb-1">
                                                     <label htmlFor="inputUniversidad" className="form-label">Carrera</label>
-                                                    <button type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCarrera">
-                                                        <FontAwesomeIcon icon={faPlus} />
-                                                    </button>
+                                                    
                                                 </div>
                                                 <select type="text" className="form-select" id="inputCarrera" 
                                                     value={carrera } 
                                                     onChange={e => setCarrera(e.target.value)}
                                                 >{carreras.map((item, index)=>{
                                                     return(
-                                                        <option value="carr">{item.nombre}</option>
+                                                        <option value={item.idCarrera}>{item.nombre}</option>
     
                                                     )
                                                 })
                                                     
                                                 }</select>
-                                                <ModalCarrera callback={setObjCarreras} />
                                             </div>
                                         </div>
                                         <div className="col-md-6">
                                             <div className="mb-3">
                                             <div className="d-flex justify-content-between pb-1">
                                                     <label htmlFor="inputUniversidad" className="form-label">Agregar Cursos</label>
-                                                    <button type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCurso">
-                                                        <FontAwesomeIcon icon={faPlus} />
-                                                    </button>
+                                                    
                                                 </div>
                                                 <select type="text" className="form-select" id="inputCurso" 
                                                     
@@ -416,9 +372,15 @@ export default function Dashboard() {
                                                 })
                                                     
                                                 }</select>
-                                                <ModalCurso callback={setObjCursos} />
+                                                {
+                                                    cursosSelec.map((item, index) =>{
+                                                        return(
+                                                            <ChipCursos nombre={item.nombre}></ChipCursos>
+                                                        )
+                                                    })
+                                                }
+                                                
                                             </div>
-                                            { rol == 'docente' &&
                                                 <div className="">
                                                     <label htmlFor="inputGrado" className="form-label pb-1">Grado alcanzado</label>
                                                     <select type="text" className="form-select" id="inputGrado"
@@ -426,13 +388,13 @@ export default function Dashboard() {
                                                         onChange={e => setGrado(e.target.value)}
                                                         required
                                                     >
-                                                        <option value="alumno">Bachiller</option>
-                                                        <option value="docente">Magister</option>
-                                                        <option value="docente">Doctor</option>
+                                                        <option value="Bachiller">Bachiller</option>
+                                                        <option value="Magister">Magister</option>
+                                                        <option value="Doctorado">Doctor</option>
+                                                        <option value="Pregrado">Pregrado</option>
                                                     </select>
                                                     
                                                 </div>
-                                            }
                                         </div>
                                     </div>
                                 </div>
