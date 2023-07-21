@@ -3,7 +3,7 @@ import Cancelar from '../../components/Card_cancelar/profe/Card_cancelar.jsx'
 import '../Cita/style1.css'
 import Button from 'react-bootstrap/Button'
 import React from 'react';
-import {citas} from '../../api/citas.js';
+import CitasApi from '../../api/citas.js';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 

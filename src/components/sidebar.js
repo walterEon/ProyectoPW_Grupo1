@@ -3,24 +3,30 @@ import styles from '../app/page.module.css'
 import Link from 'next/link';
 import { useState , useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import {citas} from '../api/citas';
+import CitasApi from '../api/citas.js';
 
 export default function Sidebar(props) {
     const router = useRouter();
     const [usuarios, setUsuarios ] = useState([]);
-    const [citasOriginal, setCitasOriginal] = useState(citas);
+    const [citasOriginal, setCitasOriginal] = useState([]);
     const [citasFiltrado, setCitasFiltrado] = useState([]);
     const [sesion , setSesion] = useState({});
     const fechaSistema = new Date();
 
     const filtrarFecha = () =>{
-        const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) >= fechaSistema));
+        const citasFiltradas = citasOriginal.filter(elemento => (elemento.fecha >= fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
         setCitasFiltrado(citasFiltradas)
 
       };
 
+      const handleOnLoad = async () => {
+        const result = await CitasApi.findAll();
+        setCitasOriginal(result.data);
+    }
+
       
     useEffect(() => {
+        handleOnLoad()
         filtrarFecha()
         let savedItem = localStorage.getItem("sesion");
         if(savedItem == undefined){
@@ -44,7 +50,7 @@ export default function Sidebar(props) {
                     >
                         Perfil
                     </Link>
-                    { (sesion.rol == 'docente' || sesion.rol == 'admin')  &&
+                    { (sesion.idRol == 2)  &&
                         <Link href="/horario"
                             className={props.name == 'horario' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} 
                             style={{backgroundColor: '#d9d9d9', border:'none', textAlign: 'center', color: '#bb59d3', fontWeight: 'bold', marginTop: '4px'}}                         
@@ -55,7 +61,7 @@ export default function Sidebar(props) {
 
                     }
 
-                    { (sesion.rol == 'docente' || sesion.rol == 'admin')  &&
+                    { (sesion.idRol == 2)  &&
                         <Link href="/calificaciones"
                             className={props.name == 'calificaciones' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} 
                             style={{backgroundColor: '#d9d9d9', border:'none', textAlign: 'center', color: '#bb59d3', fontWeight: 'bold', marginTop: '4px'}}                         
@@ -65,7 +71,7 @@ export default function Sidebar(props) {
 
 
                     }
-                    { (sesion.rol == 'alumno' || sesion.rol == 'admin')  &&
+                    { (sesion.idRol == 1)  &&
                         <Link href={citasFiltrado.length === 0 ? '/Cita' : '/recordatorio'}
                             className={props.name == 'citas' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} 
                             style={{backgroundColor: '#d9d9d9', border:'none', textAlign: 'center', color: '#bb59d3', fontWeight: 'bold', marginTop: '4px'}}                      
@@ -73,7 +79,7 @@ export default function Sidebar(props) {
                             Citas
                         </Link>
                     }
-                    { sesion.rol == 'alumno'  &&
+                    { sesion.idRol == 1  &&
                         <div>
                             <Link href="/universidades"
                                 className={props.name == 'universidades' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} 

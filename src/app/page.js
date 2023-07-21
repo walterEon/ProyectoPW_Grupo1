@@ -5,45 +5,25 @@ import { useState , useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserLock } from '@fortawesome/free-solid-svg-icons'
+import PersonasApi from '../api/personas.js';
 
 
 
 const Login = () => {
     const [usuarios, setUsuarios ] = useState([]);
-    const [sesion , setSesion] = useState({});
     const [usuario , setUsuario] = useState('');
+    const [sesion , setSesion] = useState({});
     const router = useRouter();
 
+
+    const handleOnLoad = async () => {
+        const result = await PersonasApi.findAll();
+        setUsuarios(result.data);
+        console.log(usuarios);
+    }
+
     useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('usuarios'));
-        if (items) {
-            setUsuarios(items);
-        }else{
-            var users = [
-                { id : 1 , user : 'admin' , password: 'admin', nombres : 'Admin' , rol : 'admin', apellidos : '' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 2 , user : 'profesor' , password: 'profesor', nombres : 'Profesor Pruebas' , rol : 'docente', apellidos : '' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 3 , user : 'alumno1' , password: 'alumno1', nombres : 'Alumno 1' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 4 , user : 'alumno2' , password: 'alumno2', nombres : 'Alumno 2' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 5 , user : 'alumno3' , password: 'alumno3', nombres : 'Alumno 3' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                }
-            ]
-            localStorage.setItem('usuarios', JSON.stringify(users))
-            setUsuarios(users);
-        }
+        handleOnLoad();
     }, []);
 
     
@@ -51,18 +31,20 @@ const Login = () => {
         event.preventDefault();
         var usuario = document.getElementById('usuario').value;
         var clave = document.getElementById('clave').value;
-        const sesionU = usuarios.find((e) => e.user == usuario && e.password == clave );
+        const sesionU = usuarios.find((e) => e.email == usuario && e.password == clave );
         if(sesionU){
             localStorage.setItem('sesion', JSON.stringify(sesionU))
             setSesion(sesionU);
             router.push('/dashboard');
+            
         }else{
             alert("Usuario no encontrado")
         }
     }
-    const recuperarPassword = (event) => {
+
+    const recuperarPassword =  async (event) => {
         event.preventDefault();
-        var usuarioRecuperar = usuarios.find(e => e.user == usuario)
+        var usuarioRecuperar = usuarios.find(e => e.email == usuario)
          if( usuarioRecuperar == undefined ){
             alert( 'Este usuario no existe' );
             return;
@@ -70,16 +52,22 @@ const Login = () => {
 
         var u = usuarios;
         var indexSesion = u.findIndex(object => {
-            return object.id === usuarioRecuperar.id;
+            return object.id === usuarioRecuperar.idPersona;
         })
         var randomstring = Math.random().toString(36).slice(-8);
         usuarioRecuperar.password = randomstring;
-        u.splice(indexSesion, 1, usuarioRecuperar)
-        localStorage.setItem('usuarios', JSON.stringify(u))
+
+        const result = await PersonasApi.update(usuarioRecuperar);
+
+        if(result){
+            handleOnLoad();
+        }
+
         
         alert("Tu nueva contraseña es: " + randomstring)
         location.reload();        
     }
+
     return (
         <main className={styles.main}>
             <div className="card">

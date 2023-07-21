@@ -14,12 +14,14 @@ import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import ModalUniversidad from './universidadAddComp';
-import ModalCarrera from './carreraAddComp';
-import ModalCurso from './cursoAddComp';
+
+import CarrerasApi from '../../api/carreras.js'
+import UniversidadesApi from '../../api/universidades.js'
 
 export default function Dashboard() {
     const [usuarios, setUsuarios ] = useState([]);
+    const [carreras, setCarreras ] = useState([]);
+    const [universidades, setUniversidades ] = useState([]);
     const [sesion , setSesion] = useState({});
     const router = useRouter();
 
@@ -52,13 +54,23 @@ export default function Dashboard() {
     const [optUniversidades, setOptUniversidades] = useState([]);
     const [optCarreras, setOptCarreras] = useState([]);
 
+    function obtenerUniversidad(item){
+        const idCarrera = item.idCarrera
+        const carreraFiltrada = carreras.filter((e) => e.idCarrera == idCarrera)
+        console.log(carreraFiltrada)
+        const idUniversidad = carreraFiltrada[0].idUniversidad
+        const universidadFiltrada = universidades.filter((e) => e.idUniversidad == idUniversidad)
+
+        return universidadFiltrada[0].descripcion;
+    }
+
     const setData = ( dataSesion ) => {
-        setNombres(dataSesion.nombres)
-        setApellidos(dataSesion.apellidos)
-        setDoc_tipo(dataSesion.doc_tipo)
-        setRol(dataSesion.rol)
-        setDoc_numero(dataSesion.doc_numero)
-        setUsuario(dataSesion.user)
+        setNombres(dataSesion.nombre)
+        setApellidos(dataSesion.apellido)
+        setDoc_tipo(dataSesion.tipoDocumento)
+        setRol(dataSesion.idRol)
+        setDoc_numero(dataSesion.DNI)
+        setUsuario(dataSesion.email)
         setUniversidad(dataSesion.universidad)
         setCarrera(dataSesion.carrera)
         setTitulo(dataSesion.titulo)
@@ -177,14 +189,24 @@ export default function Dashboard() {
             setOptCursos(cursos);
         }
     }
+
+    const handleOnLoad = async () => {
+        const result = await CarrerasApi.findAll();
+        setCarreras(result.data);
+        const result2 = await UniversidadesApi.findAll();
+        setUniversidades(result2.data);
+        console.log(carreras)
+        console.log(universidades)
+    }
+
     useEffect(() => {
+        handleOnLoad()
         let sesionGuardada = localStorage.getItem("sesion");
         if(sesionGuardada == undefined){
             router.push('/')
         }
-        var objSesion = JSON.parse(sesionGuardada);
-        setSesion(objSesion);
-        setData(objSesion);
+        setSesion(JSON.parse(sesionGuardada))
+        setData(JSON.parse(sesionGuardada));
 
         setObjItems();
         setObjUniversidades();
