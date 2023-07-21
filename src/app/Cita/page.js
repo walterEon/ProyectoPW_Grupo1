@@ -17,7 +17,7 @@ const Cita = () => {
     const [numeroCitas, setNumeroCitas] = useState(0);
     const [usuarios, setUsuarios ] = useState([]);
     const [sesion , setSesion] = useState({});
-    const [cursos, setCursos ] = useState([]);
+    const [cursos, setCursos ] = useState([]); 
 
  
 
@@ -39,7 +39,7 @@ const Cita = () => {
         const result2 = await PersonasApi.findAll();
         setUsuarios(result2.data);
         const result3 = await CursosApi.findAll();
-        setCursos(result3.data);
+        setCursos(result3.data); 
     }
 
       useEffect(()=>{

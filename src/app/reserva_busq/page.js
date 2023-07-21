@@ -4,21 +4,30 @@ import './style.css';
 import Form from "react-bootstrap/Form";
 import Button from 'react-bootstrap/Button';
 import Chip_Reserva from '../../components/Chip_Reserva/Chip_Reserva.jsx';
-import { useState } from 'react';
+import HorariosApi from '../../api/horarios.js';
+import PersonasApi from '../../api/personas.js';
+import UniversidadesApi from '../../api/universidades.js';
+import { useState, useEffect } from 'react';
 
 const reserva_busq = () => {
 
-    const profesores = [{nombre: 'Marco Cornejo Villanueva', universidad: 'Universidad de Lima', carrera: 'Ingeniería de Sistemas', fecha: '2023-05-26'},
-                        {nombre: 'Belen Jara Nevado', universidad: 'Universidad de Piura', carrera: 'Ingeniería Industrial', fecha: '2023-05-26'},
-                        {nombre: 'Pascuala Flores Tapia', universidad: 'Universidad Peruana Cayetano Heredia', carrera: 'Medicina', fecha: '2023-05-27'},
-                        {nombre: 'Ramona Mur Mercader', universidad: 'Universidad Nacional Mayor de San Marcos', carrera: 'Medicina', fecha: '2023-05-28'},
-                        {nombre: 'Primitivo Pulido Blanca', universidad: 'Universidad del Pacífico', carrera: 'Ingeniería Civil', fecha: '2023-05-28'},
-                        {nombre: 'Dionisia Noriega Varela', universidad: 'Universidad de Lima', carrera: 'Ingeniería Industrial', fecha: '2023-05-28'},
-                        {nombre: 'Josué Quintero Barberá', universidad: 'Universidad de Piura', carrera: 'Arquitectura', fecha: '2023-05-29'},
-                        {nombre: 'Óscar Grau Dueñas', universidad: 'Universidad Peruana Cayetano Heredia', carrera: 'Ingeniería de Sistemas', fecha: '2023-05-29'},
-                        {nombre: 'Berta Gibert Álvaro', universidad: 'Universidad Nacional Mayor de San Marcos', carrera: 'Biología', fecha: '2023-05-30'},
-                        {nombre: 'Fabio Jaén Quintana', universidad: 'Universidad del Pacífico', carrera: 'Psicología', fecha: '2023-06-01'},
-                        ]
+    const [usuarios, setUsuarios ] = useState([]);
+    const [horarios, setHorarios ] = useState([]);
+    const [universidades, setUniversidades ] = useState([]);
+
+    const profesores = usuarios.filter(e => e.idRol== 2)
+
+    for (let i = 0; i < profesores.length; i++) {
+        
+        if(universidades.find((e) => e.idUniversidad == profesores[i].carrera.idUniversidad) != undefined){
+            profesores[i].universidad = (universidades.find((e) => e.idUniversidad == profesores[i].carrera.idUniversidad).descripcion);
+        }
+        profesores[i].nomCarrera = profesores[i].carrera.nombre
+        profesores[i].dia = profesores[i].horarios[0].diaSemana
+        console.log(profesores[i].horarios.diaSemana)
+      }
+
+    console.log(profesores)
 
     const [opcion, setOpcion] = useState('nombre');
 
@@ -48,8 +57,14 @@ const reserva_busq = () => {
       const handleFechaChange = (event) => {
         console.log(event.target.value);
         setFecha(event.target.value);
-        const resultados = profesores.filter(profesor => profesor.fecha.includes(event.target.value));
-        setResultados(resultados);
+        const resultados = profesores.filter(profesor => {
+            const {dia} = profesor;
+            const terminoBusqueda = event.target.value.toLowerCase();
+            return (
+              dia.toLowerCase().includes(terminoBusqueda) 
+            );
+          });
+          setResultados(resultados);
       };
 
     
@@ -61,16 +76,29 @@ const reserva_busq = () => {
         console.log(event.target.value);
         setBusqueda(event.target.value);
         const resultados = profesores.filter(profesor => {
-          const {nombre, universidad, carrera } = profesor;
+          const {nombre, universidad,  nomCarrera} = profesor;
           const terminoBusqueda = event.target.value.toLowerCase();
           return (
             nombre.toLowerCase().includes(terminoBusqueda) ||
             universidad.toLowerCase().includes(terminoBusqueda) ||
-            carrera.toLowerCase().includes(terminoBusqueda)
+            nomCarrera.toLowerCase().includes(terminoBusqueda)
           );
         });
         setResultados(resultados);
       };
+
+      const handleOnLoad = async () => {
+        const result = await PersonasApi.findAll();
+        setUsuarios(result.data);
+        const result2 = await UniversidadesApi.findAll();
+        setUniversidades(result2.data);
+        const result3 = await HorariosApi.findAll();
+        setHorarios(result3.data);
+    }
+
+      useEffect(()=>{
+        handleOnLoad();
+    },[])
       
     return(
         <div className="contenedor">
@@ -85,7 +113,7 @@ const reserva_busq = () => {
                     <div className="form">
 
                         <div className="lupa">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-search" viewBox="0 0 40 40">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-search" viewBox="0 0 40 40">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                             </svg>
                         </div>
@@ -107,7 +135,7 @@ const reserva_busq = () => {
                                 <Form className="formFecha">
                                     <Form.Group controlId="fecha">
                                         <Form.Control
-                                        type="date"
+                                        type="text"
                                         value={fecha}
                                         onChange={handleFechaChange}
                                         className="cajaBusqF"
@@ -136,7 +164,7 @@ const reserva_busq = () => {
             <div className="profes">
                 <ul className='nobullets'>
                     { resultados.map((profesor, index) =>{
-                        return (<li key={index} style={{display: 'inline-block'}} ><Chip_Reserva nombre={profesor.nombre} universidad={profesor.universidad} carrera={profesor.carrera}/></li>)
+                        return (<li key={index} style={{display: 'inline-block'}} ><Chip_Reserva nombre={profesor.nombre+' '+profesor.apellido} universidad={(universidades.find((e) => e.idUniversidad == profesor.carrera.idUniversidad).descripcion)} carrera={profesor.carrera.nombre}/></li>)
                         })
                     }
                 </ul>

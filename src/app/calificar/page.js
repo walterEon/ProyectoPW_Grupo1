@@ -1,25 +1,39 @@
 'use client';
 import './style.css'
 import Button from 'react-bootstrap/Button'
-import {citas} from '../../api/citas.js'
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Form from 'react-bootstrap/Form'
 import {useRouter} from 'next/navigation'
+import CalificacionesApi from '../../api/calificaciones.js';
+
 
 const calificar = () =>{
 
+
+    let defaultCalif = {
+        idCalificacion: 5,
+        idCita: 0,
+        calificacion: 0,
+        comentario: ""
+    }
+
+    const [cita, setCita] = useState({});
+    const [datosCalif, setDatosCalif] = useState(defaultCalif);
+
+    
+
     const router = useRouter();
 
-    const aceptar = () =>{
+    const aceptar = async () =>{
+        setDatosCalif({...datosCalif, idCita: 5})
+        console.log(datosCalif)
+        const result = await CalificacionesApi.create(datosCalif)
         alert("¡Calificación enviada!");
         router.push("/Cita")
     }
 
-    const [ponerValor, setPonerValor] = useState('')
+    const [ponerValor, setPonerValor] = useState("")
 
-    const handleChange = (event) =>{
-        setPonerValor(event.target.value)
-    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -30,10 +44,6 @@ const calificar = () =>{
 
     const [rating, setRating] = useState(0);
 
-    const handleRatingChange = (newRating) => {
-        setRating(newRating);
-    };
-
     const Star = ({ value, isSelected, onRatingChange }) => {
         const handleClick = () => {
           onRatingChange(value);
@@ -42,6 +52,16 @@ const calificar = () =>{
             <span className='h3' onClick={handleClick} style={{ cursor: 'pointer' }}>{isSelected ? '★' : '☆'}</span>
           );
     }
+
+    useEffect(()=>{
+        
+        /*let citaGuardada = localStorage.getItem("cita");
+        if(citaGuardada == undefined){
+            router.push('/')
+        }
+        setCita(JSON.parse(citaGuardada))*/
+        
+    },[])
 
     return(
         <div className='padre'>
@@ -53,14 +73,16 @@ const calificar = () =>{
                 <Form onSubmit={handleSubmit}>
                 <h3>Calificación: {rating}</h3>
                 <div>
-                    {[1, 2, 3, 4, 5].map((value) => (
+                    
+                    {[1, 2, 3, 4, 5].map((value) => ( 
                     <Star
                         key={value}
-                        value={value}
+                        value={value} 
                         isSelected={value <= rating}
-                        onRatingChange={handleRatingChange}
+                        onRatingChange={(value) => setRating(value)}
                     />
                     ))}
+                    
                 </div>
                 <br></br>
                 <p>Si crees que es necesario agregar un comentario, por favor usa la caja de comentarios.</p>
@@ -70,11 +92,13 @@ const calificar = () =>{
                     type='text'
                     as = "textarea"
                     placeholder="Dejar comentario aquí..."
-                     onChange={handleChange} value={ponerValor}
+                    value={ponerValor}
+                     onChange={e => setDatosCalif({...defaultCalif, comentario: e.target.value})}
+                     //e => setDatosCalif({...datosCalif, comentario: e.target.value})
                     />
                 
                 <br></br>
-                <Button className='boton' onClick={aceptar}>Guardar</Button>
+                <Button className='boton' onClick={() => aceptar()}>Guardar</Button>
                 </Form>
             </div>
         </div>

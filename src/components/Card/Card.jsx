@@ -1,11 +1,32 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useRouter } from 'next/navigation'
+import CitasApi from '../../api/citas.js';
 import './style.css'
 
-const Carta = ({ nombreprof, especialidad, fecha,curso } ) => {
+const Carta = ({ nombreprof, especialidad, fecha,curso, cita } ) => {
 
   const router = useRouter();
+  const [citasOriginal, setCitasOriginal] = useState([]);
+
+  const handleClick =()=>{
+    const sesionU = citasOriginal.find((e) => e.idCita == cita.idCita);
+        if(sesionU){
+            localStorage.setItem('cita', JSON.stringify(sesionU))
+            router.push('./calificar')
+        }else{
+            alert("Usuario no encontrado")
+        }
+  }
+
+  const handleOnLoad = async () => {
+    const result = await CitasApi.findAll();
+    setCitasOriginal(result.data);
+  }
+
+  useEffect(()=>{
+    handleOnLoad();
+  },[])
 
   return (
     <Card className="carta" style={{ width: '20rem' }}>
@@ -25,10 +46,10 @@ const Carta = ({ nombreprof, especialidad, fecha,curso } ) => {
           <br></br>
         </Card.Text>
         <div className="calificacion">
-            <Button variant="outline-secondary" className='boton' onClick={() => router.push('./calificar')}>Calificar</Button>
+            <Button variant="outline-secondary" className='boton' onClick={handleClick()}>Calificar</Button>
         </div>
 
-      </Card.Body>
+      </Card.Body> 
     </Card>
   );
 }

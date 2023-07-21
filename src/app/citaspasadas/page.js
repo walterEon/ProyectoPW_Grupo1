@@ -39,9 +39,8 @@ const citaspasadas = () => {
         setUsuarios(result2.data);
         const result3 = await CursosApi.findAll();
         setCursos(result3.data);
-        
-
     }
+    
     // NO SETEA NADAAAA
       useEffect(()=>{
         handleOnLoad();
@@ -122,6 +121,7 @@ const citaspasadas = () => {
                             especialidad={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).tituloPresentacion)} 
                             fecha={elem.fecha} 
                             curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
+                            cita ={elem}
                             />
                         ))
                         }
