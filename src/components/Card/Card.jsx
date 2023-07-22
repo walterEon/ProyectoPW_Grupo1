@@ -2,6 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useRouter } from 'next/navigation'
 import CitasApi from '../../api/citas.js';
+import { useState, useEffect } from 'react';
 import './style.css'
 
 const Carta = ({ nombreprof, especialidad, fecha,curso, cita } ) => {
@@ -46,7 +47,7 @@ const Carta = ({ nombreprof, especialidad, fecha,curso, cita } ) => {
           <br></br>
         </Card.Text>
         <div className="calificacion">
-            <Button variant="outline-secondary" className='boton' onClick={handleClick()}>Calificar</Button>
+            <Button variant="outline-secondary" className='boton' onClick={handleClick}>Calificar</Button>
         </div>
 
       </Card.Body> 

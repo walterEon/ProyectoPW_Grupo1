@@ -21,36 +21,39 @@ const Cita = () => {
 
  
 
-    const filtrarFecha =  async () =>{
+    const filtrarFecha = async (citasOriginal, sesion) =>{ 
+        let citasFiltradas = []
         if(sesion.idRol == 1){
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas) 
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }else{
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }
-        
-
-    }; 
-
-    const handleOnLoad = async () => {
-        const result = await CitasApi.findAll();
-        setCitasOriginal(result.data);
-        const result2 = await PersonasApi.findAll();
-        setUsuarios(result2.data);
-        const result3 = await CursosApi.findAll();
-        setCursos(result3.data); 
-    }
+        return citasFiltradas;
+    };
+    
 
       useEffect(()=>{
-        handleOnLoad();
-        filtrarFecha();
-        let sesionGuardada = localStorage.getItem("sesion");
-        if(sesionGuardada == undefined){
-            router.push('/')
+        const handleOnLoad = async () => {
+            const result = await CitasApi.findAll();
+            setCitasOriginal(result.data);
+            let datos = result.data
+            const result2 = await PersonasApi.findAll();
+            setUsuarios(result2.data);
+            const result3 = await CursosApi.findAll();
+            setCursos(result3.data);
+            let sesionGuardada = localStorage.getItem("sesion");
+            if(sesionGuardada == undefined){
+                router.push('/')
+            }
+            setSesion(JSON.parse(sesionGuardada))
+            const citasFiltradasA = await filtrarFecha(datos, (JSON.parse(sesionGuardada))); 
+            setCitasFiltrado(citasFiltradasA)
+            setNumeroCitas(datos.length)
         }
-        setSesion(JSON.parse(sesionGuardada))
-        setNumeroCitas(citasOriginal.length)
+        handleOnLoad();
+        
 
     },[])
 

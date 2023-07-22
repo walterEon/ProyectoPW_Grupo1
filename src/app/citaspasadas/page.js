@@ -1,4 +1,6 @@
 'use client';
+import Cancelar from '../../components/Card_cancelar/profe/Card_cancelar.jsx'
+import Cancelar2 from '../../components/Card_cancelar/estudiante/Card_can.jsx'
 import Carta from '../../components/Card/Card.jsx'
 import '../Cita/style1.css'
 import Button from 'react-bootstrap/Button'
@@ -16,44 +18,45 @@ const citaspasadas = () => {
     const [numeroCitas, setNumeroCitas] = useState(0);
     const [usuarios, setUsuarios ] = useState([]);
     const [sesion , setSesion] = useState({});
-    const [cursos, setCursos ] = useState([]);
+    const [cursos, setCursos ] = useState([]); 
 
  
 
-    const filtrarFecha =  async () =>{
+    const filtrarFecha = async (citasOriginal, sesion) =>{ 
+        let citasFiltradas = []
         if(sesion.idRol == 1){
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) < fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) < fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }else{
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) < fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) < fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }
-
+        return citasFiltradas;
     };
-
-    const handleOnLoad = async () => {
-        const result = await CitasApi.findAll();
-        console.log(result.data);
-        setCitasOriginal(result.data);
-        const result2 = await PersonasApi.findAll();
-        setUsuarios(result2.data);
-        const result3 = await CursosApi.findAll();
-        setCursos(result3.data);
-    }
     
-    // NO SETEA NADAAAA
+
       useEffect(()=>{
-        handleOnLoad();
-        filtrarFecha();
-        let sesionGuardada = localStorage.getItem("sesion");
-        if(sesionGuardada == undefined){
-            router.push('/')
+        const handleOnLoad = async () => {
+            const result = await CitasApi.findAll();
+            setCitasOriginal(result.data);
+            let datos = result.data
+            const result2 = await PersonasApi.findAll();
+            setUsuarios(result2.data);
+            const result3 = await CursosApi.findAll();
+            setCursos(result3.data);
+            let sesionGuardada = localStorage.getItem("sesion");
+            if(sesionGuardada == undefined){
+                router.push('/')
+            }
+            setSesion(JSON.parse(sesionGuardada))
+            const citasFiltradasA = await filtrarFecha(datos, (JSON.parse(sesionGuardada))); 
+            setCitasFiltrado(citasFiltradasA)
+            setNumeroCitas(datos.length)
         }
-        setSesion(JSON.parse(sesionGuardada))
-        setNumeroCitas(citasOriginal.length)
-    },[])
+        handleOnLoad();
+        
 
-    
+    },[])
 
       const router = useRouter()
       const handleClick1 =()=>{
@@ -78,10 +81,10 @@ const citaspasadas = () => {
                             <hr></hr> 
                         </div>
                         <div>
-                            <h4 className='titulo'>Citas reservas pasadas</h4>
+                            <h4 className='titulo'>Citas pasadas</h4>
                             <Button variant="outline-secondary" className='programar2'onClick={handleClick}>Ver citas pasadas</Button>
                         </div>
-                        <br></br> 
+                        <br></br>
                         <br></br>
 
                         {numeroCitas === 0  || citasFiltrado.length === 0 ? 
@@ -94,7 +97,7 @@ const citaspasadas = () => {
                                 <button type="button" className="btn btn-success" onClick={handleClick1} style={{backgroundColor:'#a254b6', border:'none', borderRadius:'20px'}}>
                                     Programar una asesoría
                                 </button>
-                            </div>
+                            </div> 
                         </div>)
                         :
                         (sesion.idRol == 1 ?
@@ -107,6 +110,7 @@ const citaspasadas = () => {
                             especialidad={(usuarios.find((e) => e.idPersona == elem.idPersonaDocente).tituloPresentacion)} 
                             fecha={elem.fecha} 
                             curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
+                            cita={elem}
                             />
                         ))
                         }
@@ -116,12 +120,12 @@ const citaspasadas = () => {
                         (<div className='cards'>
                             
                         {citasFiltrado.map(elem => (
-                            <Carta
-                            nombreprof={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).nombre)+' '+ (usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).apellido)}
+                            <Carta  
+                            nomEst={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).nombre)+' '+ (usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).apellido)}
                             especialidad={(usuarios.find((e) => e.idPersona == elem.idPersonaAlumno).tituloPresentacion)} 
                             fecha={elem.fecha} 
                             curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
-                            cita ={elem}
+                            cita={elem}   
                             />
                         ))
                         }

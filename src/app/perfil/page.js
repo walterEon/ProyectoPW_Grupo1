@@ -58,25 +58,29 @@ export default function Dashboard() {
 
 
 
-    function filtrarCursosMatriculados(){
-        const personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
+    const  filtrarCursosMatriculados = async (personasCursos, cursos, sesion) =>{
+        let personasCursosFiltrados = []
+        personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
 
-        setPersonasCursos(personasCursosFiltrados)
+       
 
-
-        const cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
+        let cursosFiltrados = []
+        cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
             
 
-        setCursosSelec(cursosFiltrados);
+        return cursosFiltrados;
     }
 
-    const setData = ( dataSesion ) => {
+    
+
+    const setData = async ( dataSesion ) => {
         setNombres(dataSesion.nombre)
         setApellidos(dataSesion.apellido)
         setDoc_tipo(dataSesion.tipoDocumento)
         setRol(dataSesion.idRol)
         setDoc_numero(dataSesion.DNI)
         setUsuario(dataSesion.email)
+        setPassword(dataSesion.password)
         setUniversidad(dataSesion.carrera.idUniversidad) // no se obtiene
         setCarrera(dataSesion.idCarrera) // no se obtiene
         setTitulo(dataSesion.tituloPresentacion)
@@ -85,6 +89,7 @@ export default function Dashboard() {
         setGrado(dataSesion.grado)
         
     }
+
     const imagenUpload = async (event) => {
         event.preventDefault();
         var base64 = await toBase64(event.target.files[0]);
@@ -105,6 +110,7 @@ export default function Dashboard() {
             };
         });
       };
+
     const submitForm = async (event) => {
         event.preventDefault();
 
@@ -150,37 +156,43 @@ export default function Dashboard() {
     
   
 
-    const handleOnLoad = async () => {
-        const result = await CarrerasApi.findAll();
-        setCarreras(result.data);
-        const result2 = await UniversidadesApi.findAll();
-        setUniversidades(result2.data);
-        const result3 = await PersonasApi.findAll();
-        setUsuarios(result3.data);
-        const result4 = await CursosApi.findAll();
-        setCursos(result4.data);
-        const result5 = await PersonasCursosApi.findAll();
-        setPersonasCursos(result5.data);
- 
-    }
 
 
 
     useEffect(() => {
-        handleOnLoad()
-        let sesionGuardada = localStorage.getItem("sesion");
-        if(sesionGuardada == undefined){
-            router.push('/')
+        const handleOnLoad = async () => {
+            const result = await CarrerasApi.findAll();
+            setCarreras(result.data);
+            const result2 = await UniversidadesApi.findAll();
+            setUniversidades(result2.data);
+            const result3 = await PersonasApi.findAll();
+            setUsuarios(result3.data);
+            const result4 = await CursosApi.findAll();
+            let rawCursos = result4.data
+            setCursos(result4.data);
+            const result5 = await PersonasCursosApi.findAll();
+            let rawPersonasCursos = result5.data
+            setPersonasCursos(result5.data);
+            let sesionGuardada = localStorage.getItem("sesion");
+            if(sesionGuardada == undefined){
+                router.push('/')
+            }
+            setSesion(JSON.parse(sesionGuardada))
+            const cursosMatriculadosFiltrados = await filtrarCursosMatriculados(rawPersonasCursos, rawCursos, JSON.parse(sesionGuardada));
+            setCursosSelec(cursosMatriculadosFiltrados)
+            setData(JSON.parse(sesionGuardada)) 
         }
-        setSesion(JSON.parse(sesionGuardada))
-        setData(JSON.parse(sesionGuardada));
-        filtrarCursosMatriculados();
+
+
+        handleOnLoad()
+        
+        
 
         
     }, []);
    
     return (
-        <div className={`${styles.contenedor} col`}>
+        <div className={`${styles.contenedor} col`}> 
             <div>
                 <form method="post" onSubmit={submitForm}>
                     <div className="d-flex justify-content-between">
@@ -290,7 +302,7 @@ export default function Dashboard() {
                                         <div className="col-md-6">
                                             <label htmlFor="inputPassword" className="form-label">Contraseña Actual</label>
                                             <input type="password" className="form-control" id="inputPassword"
-                                                value={ sesion.password } 
+                                                value={ password } 
                                                 onChange={e => setPassword(e.target.value)}
                                             />
                                         </div>

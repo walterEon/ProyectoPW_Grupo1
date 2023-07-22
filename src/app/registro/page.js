@@ -177,4 +177,4 @@ const registro = () => {
         </main>
     )
 }
-export default registro
+export default registro;

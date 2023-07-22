@@ -11,7 +11,7 @@ const calificar = () =>{
 
 
     let defaultCalif = {
-        idCalificacion: 5,
+        idCalificacion: 0,
         idCita: 0,
         calificacion: 0,
         comentario: ""
@@ -19,17 +19,29 @@ const calificar = () =>{
 
     const [cita, setCita] = useState({});
     const [datosCalif, setDatosCalif] = useState(defaultCalif);
+    const [comentario, setComentario] = useState("")
+    const [calificaciones, setCalificaciones] = useState([])
 
     
 
     const router = useRouter();
 
     const aceptar = async () =>{
-        setDatosCalif({...datosCalif, idCita: 5})
-        console.log(datosCalif)
-        const result = await CalificacionesApi.create(datosCalif)
-        alert("¡Calificación enviada!");
-        router.push("/Cita")
+        var calificacionTemp = calificaciones[0]
+        calificacionTemp.idCalificacion = calificaciones.length+1
+        calificacionTemp.idCita = cita.idCita
+        calificacionTemp.calificacion = rating
+        calificacionTemp.comentario = comentario
+        console.log(calificacionTemp)
+        const result = await CalificacionesApi.create(calificacionTemp)
+        if(result){
+            alert("¡Calificación enviada!");
+            router.push("/Cita")
+        }else{
+            alert("error que penita");
+        }
+        
+        
     }
 
     const [ponerValor, setPonerValor] = useState("")
@@ -54,12 +66,19 @@ const calificar = () =>{
     }
 
     useEffect(()=>{
-        
-        /*let citaGuardada = localStorage.getItem("cita");
-        if(citaGuardada == undefined){
-            router.push('/')
+        const handleOnLoad = async () => {
+            const result = await CalificacionesApi.findAll();
+            console.log(result)
+            let datos = result.data
+            setCalificaciones(datos)
+            let citaGuardada = localStorage.getItem("cita");
+            if(citaGuardada == undefined){
+                router.push('/')
+            }
+            setCita(JSON.parse(citaGuardada))
         }
-        setCita(JSON.parse(citaGuardada))*/
+        handleOnLoad();
+        
         
     },[])
 
@@ -88,14 +107,15 @@ const calificar = () =>{
                 <p>Si crees que es necesario agregar un comentario, por favor usa la caja de comentarios.</p>
                 <br></br>
                 
-                    <Form.Control className='caja'
-                    type='text'
-                    as = "textarea"
-                    placeholder="Dejar comentario aquí..."
-                    value={ponerValor}
-                     onChange={e => setDatosCalif({...defaultCalif, comentario: e.target.value})}
-                     //e => setDatosCalif({...datosCalif, comentario: e.target.value})
-                    />
+                
+                    <textarea 
+                    className="caja" 
+                    id="inputComentario" 
+                    placeholder="Dejar comentario aquí..." 
+                    value={comentario}  
+                    onChange={e => setComentario(e.target.value)}>
+
+                    </textarea>
                 
                 <br></br>
                 <Button className='boton' onClick={() => aceptar()}>Guardar</Button>

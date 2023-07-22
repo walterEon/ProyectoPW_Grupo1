@@ -25,21 +25,22 @@ export default function Dashboard() {
     const fechaSistema = new Date();
  
 
-    const filtrarFecha =  async () =>{
+    const filtrarFecha = async (citasOriginal, sesion) =>{ 
+        let citasFiltradas = []
         if(sesion.idRol == 1){
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }else{
-            const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
+            //setCitasFiltrado(citasFiltradas)
         }
-
+        return citasFiltradas;
     };
 
     
 
     function obtenerPrimeraLetra(cadena) {
-        return cadena[0];
+        return cadena && cadena[0] ;
       }
       
     
@@ -47,25 +48,21 @@ export default function Dashboard() {
         const handleOnLoad = async () => {
             const result = await CitasApi.findAll();
             console.log(result)
-            setCitasOriginal((p) => [...p, result.data]);
+            let datos = result.data
             const result2 = await PersonasApi.findAll();
             setUsuarios(result2.data);
-        }
-        handleOnLoad();
-        
-        filtrarFecha();
-        let sesionGuardada = localStorage.getItem("sesion");
+            let sesionGuardada = localStorage.getItem("sesion");
         if(sesionGuardada == undefined){
             router.push('/')
         }
         setSesion(JSON.parse(sesionGuardada))
+        const citasFiltradasA = await filtrarFecha(datos, (JSON.parse(sesionGuardada))); 
+        setCitasFiltrado(citasFiltradasA)
+        }
         handleOnLoad();
-        filtrarFecha(); 
+        
+        
     }, []); 
-
-    useEffect(() =>{
-
-    }, [citasOriginal])
 
 
     const handleClickCalificaciones = () =>{
@@ -90,11 +87,11 @@ export default function Dashboard() {
                                     <div className="card mb-2" style={{maxWidth: `650px` , minWidth: `300px`}}>
                                         <div className="row mx-0">
                                             <div className="col-auto d-flex align-items-center px-3">
-                                                <div className={styles.cardLetra}>  {sesion.idRol  == 2 ? obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaAlumno).nombre) : obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaDocente).nombre)} </div>
+                                                <div className={styles.cardLetra}>  {sesion.idRol  == 2 ? obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaAlumno)?.nombre) : obtenerPrimeraLetra(usuarios.find((e) => e.idPersona == item.idPersonaDocente)?.nombre)} </div>
                                             </div>
                                             <div className="col px-0">
                                                 <div className="card-body px-0">
-                                                    <h5 className="card-title">{sesion.idRol  == 2 ? (usuarios.find((e) => e.idPersona == item.idPersonaAlumno).nombre)+' '+(usuarios.find((e) => e.idPersona == item.idPersonaAlumno).apellido) : (usuarios.find((e) => e.idPersona == item.idPersonaDocente).nombre)+' '+(usuarios.find((e) => e.idPersona == item.idPersonaDocente).apellido)  } </h5>
+                                                    <h5 className="card-title">{sesion.idRol  == 2 ? (usuarios.find((e) => e.idPersona == item.idPersonaAlumno)?.nombre)+' '+(usuarios.find((e) => e.idPersona == item.idPersonaAlumno)?.apellido) : (usuarios.find((e) => e.idPersona == item.idPersonaDocente)?.nombre)+' '+(usuarios.find((e) => e.idPersona == item.idPersonaDocente)?.apellido)  } </h5>
                                                     <p className="card-text text-center">
                                                         {item.fecha+' '+item.horaInicio}
                                                     </p>
