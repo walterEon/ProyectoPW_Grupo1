@@ -1,0 +1,20 @@
+GET http://localhost:3001/roles
+########
+
+POST http://localhost:3001/roles
+Content-Type: application/json
+
+{
+    "idRol": 1,
+    "descripcion": "Alumno"
+}
+###
+
+POST http://localhost:3001/roles
+Content-Type: application/json
+
+{
+    "idRol": 2,
+    "descripcion": "Docente"
+}
+###

@@ -1,0 +1,59 @@
+GET http://localhost:3001/personascursos
+########
+
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 1,
+    "idPersona": 1,
+    "idCurso": 1
+}
+###
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 2,
+    "idPersona": 1,
+    "idCurso": 2
+}
+###
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 3,
+    "idPersona": 2,
+    "idCurso": 3
+}
+###
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 4,
+    "idPersona": 3,
+    "idCurso": 5
+}
+###
+
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 5,
+    "idPersona": 5,
+    "idCurso": 12
+}
+###
+
+POST http://localhost:3001/personascursos
+Content-Type: application/json
+
+{
+    "idPersonaCurso": 6,
+    "idPersona": 5,
+    "idCurso": 1
+}
+

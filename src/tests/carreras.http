@@ -1,0 +1,112 @@
+GET http://localhost:3001/carreras
+########
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 1,
+    "nombre": "Ingeniería de Sistemas",
+    "idUniversidad": 1
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 2,
+    "nombre": "Ingeniería Civil",
+    "idUniversidad": 5
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 3,
+    "nombre": "Ingeniería Industrial",
+    "idUniversidad": 3
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 4,
+    "nombre": "Ingeniería Biómedica",
+    "idUniversidad": 7
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 5,
+    "nombre": "Ingeniería Informática",
+    "idUniversidad": 5
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 6,
+    "nombre": "Ingeniería Ambiental",
+    "idUniversidad": 7
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 7,
+    "nombre": "Ingeniería de Telecomunicaciones",
+    "idUniversidad": 7
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 8,
+    "nombre": "Ingeniería Mecatronica",
+    "idUniversidad": 4
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 9,
+    "nombre": "Ingeniería Eléctronica",
+    "idUniversidad": 4
+
+}
+###
+
+POST http://localhost:3001/carreras
+Content-Type: application/json
+
+{
+    "idCarrera": 10,
+    "nombre": "Ingeniería de Minas",
+    "idUniversidad": 6
+
+}
+###

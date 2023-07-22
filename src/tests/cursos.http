@@ -1,0 +1,252 @@
+GET http://localhost:3001/cursos
+########
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 1,
+    "nombre": "Lenguajes de Programación",
+    "idCarrera": 1
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 2,
+    "nombre": "Programación Orientada a Objetos",
+    "idCarrera": 5
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 3,
+    "nombre": "Química General",
+    "idCarrera": 3
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 4,
+    "nombre": "Algoritmia",
+    "idCarrera": 5
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 5,
+    "nombre": "Redes de Computadoras",
+    "idCarrera": 7
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 6,
+    "nombre": "Bioquímica Aplicada",
+    "idCarrera": 4
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 7,
+    "nombre": "Sistemas de Control de Telecomunicaciones",
+    "idCarrera": 7
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 8,
+    "nombre": "Nanotecnología Biomédica",
+    "idCarrera": 4
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 9,
+    "nombre": "Tecnología de Construcción",
+    "idCarrera": 2
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 10,
+    "nombre": "Ingeniería Sanitaria",
+    "idCarrera": 6
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 11,
+    "nombre": "Tecnología Industrial",
+    "idCarrera": 3
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 12,
+    "nombre": "Servicios de Información",
+    "idCarrera": 1
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 13,
+    "nombre": "Circuitos Electrónicos",
+    "idCarrera": 9
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 14,
+    "nombre": "Electromagnetismo",
+    "idCarrera": 9
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 15,
+    "nombre": "Inteligencia Artificial",
+    "idCarrera": 8
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 16,
+    "nombre": "Microbiología Ambiental",
+    "idCarrera": 6
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 17,
+    "nombre": "Hidráulica",
+    "idCarrera": 10
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 18,
+    "nombre": "Geoestadística",
+    "idCarrera": 10
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 19,
+    "nombre": "Protocolos de Enrutamiento",
+    "idCarrera": 7
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 20,
+    "nombre": "Métodos Formales",
+    "idCarrera": 5
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 21,
+    "nombre": "Experimentación Numérica",
+    "idCarrera": 5
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 22,
+    "nombre": "Mecánica de Suelos",
+    "idCarrera": 2
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 23,
+    "nombre": "Seguridad de Redes",
+    "idCarrera": 7
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 24,
+    "nombre": "Aprendizaje de Máquina",
+    "idCarrera": 1
+}
+###
+
+POST http://localhost:3001/cursos
+Content-Type: application/json
+
+{
+    "idCurso": 25,
+    "nombre": "Inteligencia de Negocios",
+    "idCarrera": 1
+}
+###

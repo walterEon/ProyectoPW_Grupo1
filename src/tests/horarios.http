@@ -1,0 +1,48 @@
+GET http://localhost:3001/horarios
+########
+
+POST http://localhost:3001/horarios
+Content-Type: application/json
+
+{
+    "idHorario": 1,
+    "idPersona": 1,
+    "horaInicio": "08:00:00",
+    "diaSemana": "Lunes",
+    "horaFin": "09:00:00"
+}
+###
+POST http://localhost:3001/horarios
+Content-Type: application/json
+
+{
+    "idHorario": 2,
+    "idPersona": 2,
+    "horaInicio": "16:00:00",
+    "diaSemana": "Miercoles",
+    "horaFin": "17:00:00"
+}
+###
+POST http://localhost:3001/horarios
+Content-Type: application/json
+
+{
+    "idHorario": 3,
+    "idPersona": 3,
+    "horaInicio": "11:00:00",
+    "diaSemana": "Jueves",
+    "horaFin": "12:00:00"
+}
+###
+
+POST http://localhost:3001/horarios
+Content-Type: application/json
+
+{
+    "idHorario": 4,
+    "idPersona": 12,
+    "horaInicio": "14:00:00",
+    "diaSemana": "Viernes",
+    "horaFin": "15:00:00"
+}
+###

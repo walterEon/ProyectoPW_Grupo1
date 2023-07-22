@@ -1,0 +1,261 @@
+GET http://localhost:3001/personas
+########
+
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 1,
+    "nombre": "Liliana",
+    "apellido": "Torres",
+    "tipoDocumento": "DNI",
+    "DNI": "42467913",
+    "idRol": 2,
+    "email": "ltorres@gmail.com",
+    "password": "ltorres",
+    "idCarrera": 2,
+    "tituloPresentacion": "Profesora de la carrera de Ingeniería Civil",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Magister"
+}
+### 
+
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 2,
+    "nombre": "Samuel",
+    "apellido": "Cardenas",
+    "tipoDocumento": "DNI",
+    "DNI": "12791021",
+    "idRol": 2,
+    "email": "scardenas@gmail.com",
+    "password": "scardenas",
+    "idCarrera": 3,
+    "tituloPresentacion": "Profesor de la carrera de Ingeniería Industrial",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Magister"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 3,
+    "nombre": "Mateo",
+    "apellido": "Villanueva",
+    "tipoDocumento": "DNI",
+    "DNI": "12917355",
+    "idRol": 2,
+    "email": "mvillanueva@gmail.com",
+    "password": "mvillanueva",
+    "idCarrera": 1,
+    "tituloPresentacion": "Profesor de la carrera de Ingenieria de Sistemas",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Doctorado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 4,
+    "nombre": "Amanda",
+    "apellido": "Rossinelli",
+    "tipoDocumento": "DNI",
+    "DNI": "28101020",
+    "idRol": 1,
+    "email": "arossinelli@gmail.com",
+    "password": "arossinelli",
+    "idCarrera": 1,
+    "tituloPresentacion": "Alumna de la carrera de Ingenieria de Sistemas",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 5,
+    "nombre": "Joseph",
+    "apellido": "Llanos",
+    "tipoDocumento": "DNI",
+    "DNI": "45678932",
+    "idRol": 1,
+    "email": "josephllanos@gmail.com",
+    "password": "jllanos",
+    "idCarrera": 1,
+    "tituloPresentacion": " Alumno de la carrera de Ingenieria de Sistemas",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 6,
+    "nombre": "Cristina",
+    "apellido": "Soldevilla",
+    "tipoDocumento": "DNI",
+    "DNI": "15975345",
+    "idRol": 1,
+    "email": "crisSoldevilla@gmail.com",
+    "password": "csoldevilla",
+    "idCarrera": 4,
+    "tituloPresentacion": " Alumna de la carrera de Ingeniería Biomédica",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 7,
+    "nombre": "Mel",
+    "apellido": "Taza",
+    "tipoDocumento": "DNI",
+    "DNI": "48642615",
+    "idRol": 1,
+    "email": "melTaza@gmail.com",
+    "password": "melsukitaza",
+    "idCarrera": 7,
+    "tituloPresentacion": " Alumna de la carrera de Ingeniería de Telecomunicaciones",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 8,
+    "nombre": "Valeria",
+    "apellido": "Wong",
+    "tipoDocumento": "DNI",
+    "DNI": "12902191",
+    "idRol": 1,
+    "email": "valeriaawong@gmail.com",
+    "password": "vwong",
+    "idCarrera": 3,
+    "tituloPresentacion": " Alumna de la carrera de Ingeniería Industrial",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+### 
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 9,
+    "nombre": "Alejandro",
+    "apellido": "Rosas",
+    "tipoDocumento": "DNI",
+    "DNI": "29282819",
+    "idRol": 1,
+    "email": "alerosas@gmail.com",
+    "password": "arosas",
+    "idCarrera": 10,
+    "tituloPresentacion": " Alumno de la carrera de Ingeniería de Minas",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 10,
+    "nombre": "Sergio",
+    "apellido": "Stoken",
+    "tipoDocumento": "DNI",
+    "DNI": "38291912",
+    "idRol": 1,
+    "email": "sergiostoken@gmail.com",
+    "password": "sstoken",
+    "idCarrera": 6,
+    "tituloPresentacion": " Alumno de la carrera de Ingeniería Ambiental",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 11,
+    "nombre": "Sebastián",
+    "apellido": "Cuadros",
+    "tipoDocumento": "DNI",
+    "DNI": "12902191",
+    "idRol": 1,
+    "email": "sebcuadros@gmail.com",
+    "password": "scuadros",
+    "idCarrera": 5,
+    "tituloPresentacion": " Alumno de la carrera de Ingeniería Informática",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 12,
+    "nombre": "Rylee",
+    "apellido": "Meyer",
+    "tipoDocumento": "DNI",
+    "DNI": "62448691",
+    "idRol": 2,
+    "email": "RMeyer@gmail.com",
+    "password": "rMeyer",
+    "idCarrera": 9,
+    "tituloPresentacion": "Profesor de la carrera de Ingeniería Electronica",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Magister"
+}
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 13,
+    "nombre": "Santiago",
+    "apellido": "Blanco",
+    "tipoDocumento": "DNI",
+    "DNI": "18727101",
+    "idRol": 1,
+    "email": "sblanco@gmail.com",
+    "password": "sblanco",
+    "idCarrera": 9,
+    "tituloPresentacion": " Alumno de la carrera de Ingeniería Electrónica",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "idPersona": 14,
+    "nombre": "Ander",
+    "apellido": "Solano",
+    "tipoDocumento": "DNI",
+    "DNI": "12902191",
+    "idRol": 1,
+    "email": "asolano@gmail.com",
+    "password": "asolano",
+    "idCarrera": 8,
+    "tituloPresentacion": " Alumno de la carrera de Ingeniería Mecatrónical",
+    "presentacion": "Lorem ipsum dolor sit amet",
+    "grado": "Pregrado"
+}
+###
+
+GET http://localhost:3001/personas/5
+###

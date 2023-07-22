@@ -1,0 +1,28 @@
+GET http://localhost:3001/calificaciones
+########
+
+
+POST http://localhost:3001/calificaciones
+Content-Type: application/json
+
+{
+    "idCalificacion": 1,
+    "idCita": 4,
+    "calificacion": 4,
+    "comentario": "Buena asesoría"
+}
+###
+
+POST http://localhost:3001/calificaciones
+Content-Type: application/json
+
+{
+    "idCalificacion": 2,
+    "idCita": 5,
+    "calificacion": 5,
+    "comentario": "Me ayudó a resolver mis dudas"
+}
+###
+
+DELETE http://localhost:3001/calificaciones/0
+########

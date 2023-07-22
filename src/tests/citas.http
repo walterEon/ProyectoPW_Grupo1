@@ -1,0 +1,100 @@
+GET http://localhost:3001/citas
+########
+
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 1,
+    "idPersonaDocente": 2,
+    "idPersonaAlumno": 5,
+    "fecha": "2023-07-23",
+    "horaInicio": "08:00:00",
+    "horaFin": "09:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Pendiente",
+    "idCurso": 3
+}
+###
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 2,
+    "idPersonaDocente": 1,
+    "idPersonaAlumno": 4,
+    "fecha": "2023-07-26",
+    "horaInicio": "16:00:00",
+    "horaFin": "17:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Pendiente",
+    "idCurso": 1
+}
+###
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 3,
+    "idPersonaDocente": 3,
+    "idPersonaAlumno": 7,
+    "fecha": "2023-07-27",
+    "horaInicio": "11:00:00",
+    "horaFin": "12:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Pendiente",
+    "idCurso": 1
+}
+###
+
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 4,
+    "idPersonaDocente": 2,
+    "idPersonaAlumno": 5,
+    "fecha": "2023-07-16",
+    "horaInicio": "08:00:00",
+    "horaFin": "09:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Completada",
+    "idCurso": 3
+}
+###
+
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 7,
+    "idPersonaDocente": 3,
+    "idPersonaAlumno": 7,
+    "fecha": "2023-07-20",
+    "horaInicio": "11:00:00",
+    "horaFin": "12:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Completada",
+    "idCurso": 1
+}
+###
+
+POST http://localhost:3001/citas
+Content-Type: application/json
+
+{
+    "idCita": 8,
+    "idPersonaDocente": 12,
+    "idPersonaAlumno": 5,
+    "fecha": "2023-07-24",
+    "horaInicio": "13:00:00",
+    "horaFin": "14:00:00",
+    "enlaceSesion": "https://nothing.com/",
+    "estado": "Pendiente",
+    "idCurso": 6
+}
+###
+
+DELETE http://localhost:3001/citas/7
+Content-Type: application/json
+###

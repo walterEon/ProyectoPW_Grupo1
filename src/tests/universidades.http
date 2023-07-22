@@ -1,0 +1,74 @@
+GET http://localhost:3001/universidades
+########
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 1,
+    "descripcion": "Universidad de Lima"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 2,
+    "descripcion": "Universidad del Pacífico"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 3,
+    "descripcion": "Pontificia Universidad Católica del Perú"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 4,
+    "descripcion": "Universidad Peruana de Ciencias Aplicadas"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 5,
+    "descripcion": "Universidad San Martín de Porres"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 6,
+    "descripcion": "Universidad de Piura"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 7,
+    "descripcion": "Universidad Peruana Cayetano Heredia"
+}
+###
+
+POST http://localhost:3001/universidades
+Content-Type: application/json
+
+{
+    "idUniversidad": 8,
+    "descripcion": "Universidad Nacional de Ingeniería"
+}
+###
