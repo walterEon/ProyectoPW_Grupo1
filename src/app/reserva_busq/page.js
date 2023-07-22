@@ -23,9 +23,9 @@ const reserva_busq = () => {
             profesores[i].universidad = (universidades.find((e) => e.idUniversidad == profesores[i].carrera.idUniversidad).descripcion);
         }
         profesores[i].nomCarrera = profesores[i].carrera.nombre
-        profesores[i].dia = profesores[i].horarios[0].diaSemana
+        profesores[i].dia = profesores[i].horarios[0]?.diaSemana
         console.log(profesores[i].horarios.diaSemana)
-      }
+      } 
 
     console.log(profesores)
 
@@ -61,7 +61,7 @@ const reserva_busq = () => {
             const {dia} = profesor;
             const terminoBusqueda = event.target.value.toLowerCase();
             return (
-              dia.toLowerCase().includes(terminoBusqueda) 
+              dia?.toLowerCase().includes(terminoBusqueda) 
             );
           });
           setResultados(resultados);

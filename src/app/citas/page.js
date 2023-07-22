@@ -55,22 +55,40 @@ export default function Dashboard() {
     const [cita, setCita] = useState(citaDefault);
 
     
+    const  filtrarCursosMatriculados = async (personasCursos, cursos, sesion) =>{
+        let personasCursosFiltrados = []
+        personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
 
-    function filtrarCursosMatriculados(){
-        const personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
+       
 
-        setPersonasCursos(personasCursosFiltrados)
+        let cursosFiltrados = []
+        cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
+        return cursosFiltrados;
+    }
 
-        const cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
-            
-        setCursosSelec(cursosFiltrados); 
-    } 
 
       const handleBuscarClick = async () => {
-        setCita({...cita, idCita: citas.length+10, idPersonaDocente: sesion.idPersona, idPersonaAlumno: user.idPersona,
-        fecha: fecha, horaInicio: sesion.horarios[0].horaInicio, horaFin: sesion.horarios[0].horaFin, enlaceSesion: "https://nothing.com/", estado: "Pendiente", idCurso: parseInt(curso)})
-        console.log(cita)
-        const result = await CitasApi.create(cita);
+        //setCita({...cita, idCita: citas.length+10, idPersonaDocente: sesion.idPersona, idPersonaAlumno: user.idPersona,
+        //fecha: fecha, horaInicio: sesion.horarios[0].horaInicio, horaFin: sesion.horarios[0].horaFin, enlaceSesion: "https://nothing.com/", estado: "Pendiente", idCurso: parseInt(curso)})
+        let ids = []
+        for (let i = 0; i < citas.length; i++){
+            ids.push(citas[i].idCita)
+        }
+        const maxIdCita = Math.max(...ids)+1
+        const nuevaCita = {
+            idCita: maxIdCita+2,
+            idPersonaDocente: sesion.idPersona,
+            idPersonaAlumno: user.idPersona,
+            fecha: fecha,
+            horaInicio: sesion.horarios[0].horaInicio,
+            horaFin: sesion.horarios[0].horaFin,
+            enlaceSesion: "https://nothing.com/",
+            estado: "Pendiente",
+            idCurso: cursosSelec[0].idCurso
+          };
+        console.log(nuevaCita)
+        
+        const result = await CitasApi.create(nuevaCita);
         if(result){
             setShowModal(true);
         }else{
@@ -85,28 +103,26 @@ export default function Dashboard() {
  
       };
 
-      const handleOnLoad = async () => {
-        const result4 = await CursosApi.findAll();
-        setCursos(result4.data);
-        const result5 = await PersonasCursosApi.findAll();
-        setPersonasCursos(result5.data);
-        const result6 = await CitasApi.findAll();
-        setCitas(result6.data);
- 
-    }
-
-      
-    
     useEffect(() => {
-        handleOnLoad()
-        let sesionGuardada = localStorage.getItem("docente");
-        let sesionGuardada2 = localStorage.getItem("sesion");
-        if(sesionGuardada == undefined){
-            router.push('/')
+        const handleOnLoad = async () => {
+            const result = await CursosApi.findAll();
+            let rawCursos = result.data
+            const result2 = await PersonasCursosApi.findAll();
+            let rawPersonasCursos = result2.data
+            const result3 = await CitasApi.findAll();
+            setCitas(result3.data);
+            console.log(result3.data);
+            let sesionGuardada = localStorage.getItem("docente");
+            let sesionGuardada2 = localStorage.getItem("sesion");
+            if(sesionGuardada == undefined){
+                router.push('/')
+            }
+            setSesion(JSON.parse(sesionGuardada))
+            setUser(JSON.parse(sesionGuardada2))
+            const cursosFiltrados2 = await filtrarCursosMatriculados(rawPersonasCursos, rawCursos, JSON.parse(sesionGuardada))
+            setCursosSelec(cursosFiltrados2)
         }
-        setSesion(JSON.parse(sesionGuardada))
-        setUser(JSON.parse(sesionGuardada2))
-        filtrarCursosMatriculados()
+        handleOnLoad();
     }, []);
    
     return (
@@ -121,7 +137,7 @@ export default function Dashboard() {
                             <Modal.Title>Reserva de cita</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                            Usted ha reservado la cita existosamente para el {fecha}a las  am  para la asesoría del curso . Encontrará el detalle en su página de citas
+                            Usted ha reservado la cita existosamente para el {fecha} a las {sesion.horarios[0]?.horaInicio} para la asesoría del curso {cursosSelec[0]?.nombre}. Encontrará el detalle en su página de citas
                             </Modal.Body>
                             <Modal.Footer>
                             <Button variant="secondary" onClick={handleCloseModal}>OK</Button>

@@ -73,10 +73,6 @@ const Cita = () => {
         }
         const result = await CitasApi.remove(elem.idCita);
            
-        handleOnLoad();
-
-        
-        
       };
       const router = useRouter()
       const handleClick1 =()=>{

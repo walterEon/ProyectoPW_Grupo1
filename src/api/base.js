@@ -1,7 +1,7 @@
 import axios from 'axios';
 
- // const URI = 'https://grupo1-programacion-web-2023-1-1807-api.azurewebsites.net';
-const URI = 'http://localhost:3001';
+const URI = 'https://grupo1-programacion-web-2023-1-1807-api.azurewebsites.net';
+
 
 const get = async (endpoint) => {
     try {

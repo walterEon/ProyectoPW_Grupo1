@@ -17,7 +17,7 @@ const Lista = ({nombre, fecha, puntaje, comentario, num}) => {
                 <p>{contador(num)}</p>
             </div>
             <div className="descripcion">
-                <p>{nombre} - {fecha} - {puntaje}</p>
+                <p>{nombre} - {fecha} - {puntaje} Estrella(s)</p>
                 <p>"{comentario}"</p>
             </div>
         </div>
