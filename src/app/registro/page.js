@@ -1,87 +1,105 @@
-'use client';
-import styles from '../page.module.css'
-import "bootstrap/dist/css/bootstrap.min.css";
-import Link from 'next/link';
-import { useState , useEffect } from 'react'
-import { useRouter } from 'next/navigation';
-import React from 'react'
-import Select from 'react-select'
+"use client"
+ import { useState, useEffect } from 'react';
+ import { useRouter } from 'next/navigation';
+ import Link from 'next/link';
+ import styles from '../page.module.css';
+ import 'bootstrap/dist/css/bootstrap.min.css';
+ import Select from 'react-select';
+ import personasApi from '@/api/personas';
+ 
+ const Registro = () => {
 
+   const [usuarios, setUsuarios] = useState([]);
+   const router = useRouter();
+ 
+   
+ 
+   const [nombres, setNombres] = useState('');
+   const [apellidos, setApellidos] = useState('');
+   const [doc_tipo, setDoc_tipo] = useState('');
+   const [rol, setRol] = useState('');
+   const [doc_numero, setDoc_numero] = useState('');
+   const [idPersona, setIdPersona] = useState('');
+   const [usuario, setUsuario] = useState('');
+   const [password, setPassword] = useState('');
+   const [check_password, setCheck_password] = useState('');
+ 
+   const submitForm = async (event) => {
+     event.preventDefault();
+     if (usuarios === '' || password === '' || check_password === '') {
+       alert('Complete sus datos de Usuario');
+       return;
+     }
+     if (usuarios.find((e) => e.user === usuario)) {
+       alert('Ese usuario ya existe');
+       return;
+     }
+     if (password !== check_password) {
+       alert('Las contraseñas no son iguales');
+       return;
+     }
+     // Obtiene el último idPersona registrado y asigna el siguiente número disponible
+     Math.max()
+     let ids = []
+     for (let i = 0; i < usuarios.length; i++){
+        ids.push(usuarios[i].idPersona)
+     }
+     const ultidpersona = Math.max(...ids)+1
+     
+    
+     // Objeto con los datos del nuevo usuario
+     const newUser = {
+       idPersona: ultidpersona,
+       nombre: nombres,
+       apellido: apellidos,
+       tipoDocumento: doc_tipo,
+       DNI: doc_numero,
+       idRol: (rol === "alumno" ? 1 : 2), // Suponemos que 1 representa 'alumno' y 2 representa 'docente'
+       email: usuario,
+       password: password,
+       idCarrera: 1, // Id de la carrera (aquí asumimos que siempre es 2)
+       tituloPresentacion: "", // Valor fijo para este ejemplo
+       presentacion: "", // Valor fijo para este ejemplo
+       grado: "", // Valor fijo para este ejemplo
+     };
 
-const registro = () => {
-    const [usuarios, setUsuarios ] = useState([]);
-    const router = useRouter();
-    useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('usuarios'));
-        if (items) {
-            setUsuarios(items);
-        }else{
-            var users = [
-                { id : 1 , user : 'admin' , password: 'admin', nombres : 'Admin' , rol : 'docente', apellidos : '' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 2 , user : 'profesor' , password: 'profesor', nombres : 'Profesor Pruebas' , rol : 'docente', apellidos : '' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 3 , user : 'alumno1' , password: 'alumno1', nombres : 'Alumno 1' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 4 , user : 'alumno2' , password: 'alumno2', nombres : 'Alumno 2' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '' ,
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                },
-                { id : 5 , user : 'alumno3' , password: 'alumno3', nombres : 'Alumno 3' , rol : 'alumno', apellidos : 'Pruebas' , doc_tipo : '' , doc_numero : '',
-                    universidad : '', carrera : '', cursos : '',
-                    titulo: '', presentacion : '', 
-                }
-            ]
-            localStorage.setItem('usuarios', JSON.stringify(users))
-        }
-    }, []);
+     console.log(newUser);
 
-    const [nombres, setNombres] = useState('');
-    const [apellidos, setApellidos] = useState( '' );
-    const [doc_tipo, setDoc_tipo] = useState( '');
-    const [rol, setRol] = useState('');
-    const [doc_numero, setDoc_numero] = useState('');
+     
+     try {
+       // Realiza la solicitud POST al backend para registrar el nuevo usuario utilizando la función personasApi
+       const response = await personasApi.create(newUser);
+ 
+       // Comprueba el resultado de la solicitud
+       if (response && response.status === 200) {
+         // Registro exitoso, redirige a la página de inicio de sesión
+         alert('Registro exitoso!');
+         router.push('/');
+       } else {
+         // Manejo de errores en caso de que algo salga mal en el backend
+         alert('Error al registrar usuario');
+       }
+     } catch (error) {
+       // Manejo de errores en caso de problemas de conexión o errores en el backend
+       alert('Error al registrar usuario');
+     }
+   };
 
-    const [usuario , setUsuario] = useState('')
-    const [password , setPassword] = useState('')
-    const [check_password , setCheck_password] = useState('')
+   useEffect(() => {
+    // Aquí puedes realizar una solicitud GET al backend para obtener la lista de usuarios registrados
+    const handleOnLoad = async () => {
+       try{
+           const result = await personasApi.findAll();
+           setUsuarios(result.data);
+       } catch (error) {
+           console.error('Error al obtener usuarios:', error);
+         }
+    
+   } 
+   handleOnLoad();
+   console.log(usuarios[usuarios.length-1]) 
+  }, []);
 
-    const submitForm = (event) => {
-        event.preventDefault();
-        if(usuarios == '' || password == '' || check_password == ''){
-            setTab('datos')
-            alert("Complete sus datos de Usuario")
-            return;
-        }
-        if(usuarios.find(e => e.user == usuario)){
-            alert('Ese usuario ya existe')
-            return;
-        }
-        if(password != check_password){
-            alert('Las contraseñas no son iguale')
-            return;
-        }
-        var u = usuarios;
-        u.push({ 
-            id : (u.length + 1)  , user : usuario , password: password, 
-            nombres : nombres , apellidos : apellidos , 
-            rol : rol , doc_tipo : doc_tipo , doc_numero : doc_numero,
-            universidad : '', carrera : '', cursos : [],
-            titulo: '', presentacion : '', grado : ''
-        })
-        localStorage.setItem('usuarios', JSON.stringify(u))
-        alert("Registro exitoso!")
-        router.push('/');
-    }
-    const cambio = (event) => {
-        console.log(event.target.value)
-    }
     return (
         <main className={styles.main} style={{maxWidth : `1200px`}}>
             <div className="mb-4">
@@ -177,4 +195,5 @@ const registro = () => {
         </main>
     )
 }
-export default registro;
+export default Registro;
+
