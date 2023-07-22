@@ -24,14 +24,14 @@ const Cita = () => {
     const filtrarFecha =  async () =>{
         if(sesion.idRol == 1){
             const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaAlumno == sesion.idPersona));
-            setCitasFiltrado(citasFiltradas)
+            setCitasFiltrado(citasFiltradas) 
         }else{
             const citasFiltradas = citasOriginal.filter(elemento => (new Date(elemento.fecha) > fechaSistema && elemento.idPersonaDocente == sesion.idPersona));
             setCitasFiltrado(citasFiltradas)
         }
         
 
-    };
+    }; 
 
     const handleOnLoad = async () => {
         const result = await CitasApi.findAll();
@@ -114,7 +114,7 @@ const Cita = () => {
                                 <button type="button" className="btn btn-success" onClick={handleClick1} style={{backgroundColor:'#a254b6', border:'none', borderRadius:'20px'}}>
                                     Programar una asesoría
                                 </button>
-                            </div>
+                            </div> 
                         </div>)
                         :
                         (sesion.idRol == 1 ?
@@ -128,6 +128,7 @@ const Cita = () => {
                             fecha={elem.fecha} 
                             curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
                             onDelete={() => handleDeleteCard(elem)}
+                            cita={elem}
                             />
                         ))
                         }
@@ -143,6 +144,7 @@ const Cita = () => {
                             fecha={elem.fecha} 
                             curso={(cursos.find((e) => e.idCurso == elem.idCurso).nombre)}
                             onDelete={() => handleDeleteCard(elem)}
+                            cita={elem}   
                             />
                         ))
                         }

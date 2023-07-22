@@ -42,7 +42,7 @@ const Carta = ({ nombreprof, especialidad, fecha,curso, cita } ) => {
         <Card.Title>{fecha}</Card.Title>
         <Card.Text>
           <p>{curso}</p>
-          <Card.Link>Enlace Zoom</Card.Link>
+          <Card.Link href={cita.enlaceSesion}>Enlace Zoom</Card.Link>
           <br></br>
         </Card.Text>
         <div className="calificacion">

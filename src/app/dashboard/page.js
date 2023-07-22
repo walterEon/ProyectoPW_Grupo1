@@ -36,12 +36,7 @@ export default function Dashboard() {
 
     };
 
-    const handleOnLoad = async () => {
-        const result = await CitasApi.findAll();
-        setCitasOriginal(result.data);
-        const result2 = await PersonasApi.findAll();
-        setUsuarios(result2.data);
-    }
+    
 
     function obtenerPrimeraLetra(cadena) {
         return cadena[0];
@@ -49,7 +44,15 @@ export default function Dashboard() {
       
     
     useEffect(() => {
+        const handleOnLoad = async () => {
+            const result = await CitasApi.findAll();
+            console.log(result)
+            setCitasOriginal((p) => [...p, result.data]);
+            const result2 = await PersonasApi.findAll();
+            setUsuarios(result2.data);
+        }
         handleOnLoad();
+        
         filtrarFecha();
         let sesionGuardada = localStorage.getItem("sesion");
         if(sesionGuardada == undefined){
@@ -57,10 +60,12 @@ export default function Dashboard() {
         }
         setSesion(JSON.parse(sesionGuardada))
         handleOnLoad();
-        filtrarFecha();
-    }, []);
+        filtrarFecha(); 
+    }, []); 
 
-    
+    useEffect(() =>{
+
+    }, [citasOriginal])
 
 
     const handleClickCalificaciones = () =>{
@@ -78,7 +83,7 @@ export default function Dashboard() {
                     <div className="card-header d-flex justify-content-between">
                         <label> Próximas citas </label>
                     </div>
-                    <div className="card-body"> 
+                    <div className="card-body">   
                     {
                                 (citasFiltrado.length > 0) &&
                                     citasFiltrado?.map(item =>(

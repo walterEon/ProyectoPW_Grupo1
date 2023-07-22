@@ -164,7 +164,15 @@ const reserva_busq = () => {
             <div className="profes">
                 <ul className='nobullets'>
                     { resultados.map((profesor, index) =>{
-                        return (<li key={index} style={{display: 'inline-block'}} ><Chip_Reserva nombre={profesor.nombre+' '+profesor.apellido} universidad={(universidades.find((e) => e.idUniversidad == profesor.carrera.idUniversidad).descripcion)} carrera={profesor.carrera.nombre}/></li>)
+                        return (
+                        <li key={index} style={{display: 'inline-block'}} >
+                            <Chip_Reserva 
+                            nombre={profesor.nombre+' '+profesor.apellido} 
+                            universidad={(universidades.find((e) => e.idUniversidad == profesor.carrera.idUniversidad).descripcion)} 
+                            carrera={profesor.carrera.nombre}
+                            docente ={profesor}
+                            />
+                            </li>)
                         })
                     }
                 </ul>

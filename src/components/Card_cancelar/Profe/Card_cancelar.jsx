@@ -2,11 +2,14 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import React, { useState } from 'react';
+import CitasApi from '../../../api/citas.js';
+import { useEffect } from 'react';
 import '../Profe/style.css'
 
 
-const Cancelar = ({ nombreprof, especialidad, fecha, curso, onDelete }) => {
+const Cancelar = ({ nombreprof, especialidad, fecha, curso, onDelete, cita }) => {
   const [isDeleted, setIsDeleted] = useState(false);
+  const [citasOriginal, setCitasOriginal] = useState([]);
 
   const handleDelete = () => {
     setIsDeleted(true);
@@ -16,6 +19,15 @@ const Cancelar = ({ nombreprof, especialidad, fecha, curso, onDelete }) => {
   if (isDeleted) {
     return null; // No se muestra el card si está marcado como eliminado
   }
+
+  const handleOnLoad = async () => {
+    const result = await CitasApi.findAll();
+    setCitasOriginal(result.data);
+  }
+
+  useEffect(()=>{
+    handleOnLoad();
+  },[])
 
   return (
     <Card className="carta" style={{ width: '20rem' }}>
@@ -31,7 +43,7 @@ const Cancelar = ({ nombreprof, especialidad, fecha, curso, onDelete }) => {
         <Card.Title>{fecha}</Card.Title>
         <Card.Text>
           <p>{curso}</p>
-          <Card.Link>Enlace Zoom</Card.Link>
+          <Card.Link href={cita.enlaceSesion}>Enlace Zoom</Card.Link>
           <br />
         </Card.Text>
         <div className="calificacion">

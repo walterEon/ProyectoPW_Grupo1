@@ -12,54 +12,101 @@ import Button from 'react-bootstrap/Button'
 import React from 'react'
 
 import { useRouter } from 'next/navigation';
+import CursosApi from '../../api/cursos.js'
+import PersonasCursosApi from '../../api/personascursos.js'
+import CitasApi from '../../api/citas.js'
 
 export default function Dashboard() {
+
+    const citaDefault = {
+        idCita: 0,
+        idPersonaDocente: 0,
+        idPersonaAlumno: 0,
+        fecha: "",
+        horaInicio: "",
+        horaFin: "",
+        enlaceSesion: "",
+        estado: "",
+        idCurso: 0
+    } 
+
     const [usuarios, setUsuarios ] = useState([]);
     const [sesion , setSesion] = useState({});
     const router = useRouter();
+    const [user, setUser] = useState({})
 
     const [grado , setGrado] = useState('')
 
     const [imagen , setImagen] = useState(undefined)
+    const [citas, setCitas] = useState([])
 
     const [filtro, setFiltro] = useState('');
     const [cursosFiltrados, setCursosFiltrados] = useState([]);
     const [cursoSeleccionado, setCursoSeleccionado] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [cursosSelec, setCursosSelec] = useState([]);
+    const [personasCursos, setPersonasCursos ] = useState([]);
+    const [cursos, setCursos] = useState([]);
+
+    const[fecha, setFecha] = useState('')
+    const[curso, setCurso] = useState(0)
+    const[hora, setHora] = useState('')
+    
+    const [cita, setCita] = useState(citaDefault);
 
     
 
+    function filtrarCursosMatriculados(){
+        const personasCursosFiltrados = personasCursos.filter((e) => e.idPersona == sesion.idPersona)
 
-    const setData = ( dataSesion ) => {
-        setImagen(dataSesion.imagen || '')
-        if(dataSesion.rol == 'docente'){
-            setGrado(dataSesion.grado)
+        setPersonasCursos(personasCursosFiltrados)
+
+        const cursosFiltrados = cursos.filter((e) => personasCursosFiltrados.some((f) => f.idCurso == e.idCurso));
+            
+        setCursosSelec(cursosFiltrados); 
+    } 
+
+      const handleBuscarClick = async () => {
+        setCita({...cita, idCita: citas.length+10, idPersonaDocente: sesion.idPersona, idPersonaAlumno: user.idPersona,
+        fecha: fecha, horaInicio: sesion.horarios[0].horaInicio, horaFin: sesion.horarios[0].horaFin, enlaceSesion: "https://nothing.com/", estado: "Pendiente", idCurso: parseInt(curso)})
+        console.log(cita)
+        const result = await CitasApi.create(cita);
+        if(result){
+            setShowModal(true);
         }else{
-            setGrado('')
+            alert('error')
         }
-    }
-
-    
-      const handleBuscarClick = () => {
-        setShowModal(true);
+        
       };
     
       const handleCloseModal = () => {
         setShowModal(false);
         router.push('/reserva_busq')
-
+ 
       };
 
+      const handleOnLoad = async () => {
+        const result4 = await CursosApi.findAll();
+        setCursos(result4.data);
+        const result5 = await PersonasCursosApi.findAll();
+        setPersonasCursos(result5.data);
+        const result6 = await CitasApi.findAll();
+        setCitas(result6.data);
+ 
+    }
+
+      
+    
     useEffect(() => {
-        let sesionGuardada = localStorage.getItem("sesion");
+        handleOnLoad()
+        let sesionGuardada = localStorage.getItem("docente");
+        let sesionGuardada2 = localStorage.getItem("sesion");
         if(sesionGuardada == undefined){
             router.push('/')
         }
-        var objSesion = JSON.parse(sesionGuardada);
-        setSesion(objSesion);
-        setData(objSesion);
-
-        
+        setSesion(JSON.parse(sesionGuardada))
+        setUser(JSON.parse(sesionGuardada2))
+        filtrarCursosMatriculados()
     }, []);
    
     return (
@@ -74,12 +121,12 @@ export default function Dashboard() {
                             <Modal.Title>Reserva de cita</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                            Usted ha reservado la cita existosamente para el Lunes 24 de abril del 2023 a las 9:00 am para la asesoría del curso {cursoSeleccionado}. Encontrará el detalle en su página de citas
+                            Usted ha reservado la cita existosamente para el {fecha}a las  am  para la asesoría del curso . Encontrará el detalle en su página de citas
                             </Modal.Body>
                             <Modal.Footer>
                             <Button variant="secondary" onClick={handleCloseModal}>OK</Button>
-                            </Modal.Footer>
-                        </Modal>
+                            </Modal.Footer>  
+                        </Modal> 
                     </div>
                     <hr></hr>
 
@@ -91,10 +138,10 @@ export default function Dashboard() {
                             </div>
 
                             <div className="cont">
-                                <h6>Profesor Juan López</h6>
-                                <p>Magister en Ingeniería de Software</p>
+                                <h6>Docente {sesion.nombre+' '+sesion.apellido}</h6>
+                                <p>{sesion.tituloPresentacion}</p>
                             </div>
-                       </div>
+                       </div> 
                         
                         <div className="presentacion">
                             
@@ -104,14 +151,14 @@ export default function Dashboard() {
                                 </div>
                             </div>
                                 
-                            <div className="contenedorsito">
-                                <p className="text-justify">Fusce condimentum mauris diam, in vestibulum sapien molestie nec. Donec non velit quam. Sed non facilisis felis. Proin vel egestas lacus, cursus efficitur lorem. Morbi consectetur sem in turpis varius suscipit. Vestibulum porta urna eget sem tempor ornare et sit amet ipsum. Quisque bibendum nunc id molestie dapibus. Quisque sit amet metus risus. Fusce nec ipsum quis augue luctus sagittis id consectetur nisl. Nunc mattis ipsum ac mauris gravida, id blandit nunc suscipit. Maecenas pharetra, nisi a aliquet fringilla, nisi lectus imperdiet purus, a tincidunt lectus erat id dolor. Nam mauris orci, fringilla ut lacus sit amet, maximus sodales libero. Praesent nulla ipsum, ultrices eget blandit aliquet, tincidunt a justo. Donec quis maximus purus. Nulla lacinia gravida arcu sed placerat. Donec pulvinar risus sit amet est eleifend, quis fringilla dui aliquet.</p>
+                            <div className="contenedorsitoo">
+                                <p className="text-justify">{sesion.presentacion}</p>
                             </div>
                             
                             <div className="contenedorsito">
                                 <div>
                                     <h6 style={{color:'gray'}}>Correo electrónico</h6>
-                                    <p style={{fontWeight:'bold'}}>jlopez1949@ulima.edu.pe</p>
+                                    <p style={{fontWeight:'bold'}}>{sesion.email}</p>
                                 </div>
                             </div>
                         </div>
@@ -122,21 +169,16 @@ export default function Dashboard() {
                             </div >
 
                             <div className="listaCursos">
-                                <div className="button">
-                                    <button class="d-flex btn btn-primary" type="button" value="Input" style={{color: 'purple', backgroundColor:'white', borderColor: 'purple', border:'solid 1.6px', fontWeight:'bold'}} disabled>Ingeniería de Software</button>
-                                </div>
-
-                                <div className="button">
-                                    <button class=" btn btn-primary" type="button" value="Input" style={{color: 'purple', backgroundColor:'white', borderColor: 'purple', border:'solid 1.6px', fontWeight:'bold'}} disabled>Programación Web</button>
-                                </div>
-
-                                <div className="button">
-                                    <button class="btn btn-primary" type="button" value="Input" style={{color: 'purple', backgroundColor:'white', borderColor: 'purple', border:'solid 1.6px', fontWeight:'bold'}} disabled>Programación de Videojuegos</button>
-                                </div>
-
-                                <div className="button">
-                                    <button class="btn btn-primary" type="button" value="Input" style={{color: 'purple', backgroundColor:'white', borderColor: 'purple', border:'solid 1.6px', fontWeight:'bold'}} disabled>Programación Orientada a Objetos</button>
-                                </div> 
+                            {cursosSelec.map((item, index)=>{
+                                                    return(
+                                                        <div className="button">
+                                                            <button class="d-flex btn btn-primary" type="button" value="Input" style={{color: 'purple', backgroundColor:'white', borderColor: 'purple', border:'solid 1.6px', fontWeight:'bold'}} disabled>{item.nombre}</button>
+                                                        </div>
+    
+                                                    )
+                                                })
+                                                    
+                                                }
                             </div>
                         </div>
                     </div>
@@ -149,18 +191,35 @@ export default function Dashboard() {
                                         <div className="formFecha">
                                             <h6 className="ingresarFecha">Ingrese una Fecha</h6>
                                             <Form.Group controlId="dob">
-                                                <Form.Control type="date" name="dob" className="fechaElegir" />
+                                                <Form.Control type="date" name="dob" className="fechaElegir" onChange={(e) => setFecha(e.target.value)} />
                                             </Form.Group>
                                         </div>
                                         <div className="formCurso">
                                             <h6 className="ingresarCurso">Curso de Interés</h6>
-                                            <select type="text" className="form-select" id="inputCurso" style={{width:'95%', marginLeft:'14px',marginRight:'14px', paddingBottom:'5px', paddingTop:'0px', height:'25px', border:'none', fontSize:'15px', boxShadow:'none'}}
+                                            <select type="text" value={curso} 
+                                                        onChange={e => setCurso(e.target.value)}
+                                                         className="form-select"
+                                                          id="inputCurso" style={{width:'95%', marginLeft:'14px',marginRight:'14px', paddingBottom:'5px', paddingTop:'0px', height:'25px', border:'none', fontSize:'15px', boxShadow:'none'}}
                                             >
-                                                <option value="curso1">Ingeniería de Software</option>
-                                                <option value="curso2">Programación Web</option>
-                                                <option value="curso3">Programación de Videojuegos</option>
-                                                <option value="cursi4">Programación Orientada a Objetos</option>
+                                                {cursosSelec.map((item, index)=>{ 
+                                                    return(
+                                                        <option value={item.idCurso}>
+                                                            {item.nombre}
+                                                        </option> 
+                                                    )
+                                                }) 
+                                                    
+                                                }   
+                                                
+
                                             </select>
+
+
+                                            
+                                            
+                                            
+                                            
+                                            
                                             
                                         </div>
                                 </div>
@@ -171,17 +230,12 @@ export default function Dashboard() {
                                     </div>
 
                                     <div className="horarios">
-                                        <div className="button">
-                                            <button class="btn btn-primary" type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>8:00</button>
-                                        </div>
-
-                                        <div className="button">
-                                            <button class="btn btn-primary" type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>9:00</button>
-                                        </div>
-
-                                        <div className="button">
-                                            <button class="btn btn-primary" type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>10:00</button>
-                                        </div>
+                                    <div className="button">
+                                        <button class="btn btn-primary"  type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>08:00</button>
+                                    </div>
+                                    <div className="button">
+                                        <button class="btn btn-primary"  type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>08:30</button>
+                                    </div>
                                     </div>
                                     <div className="detalle">
                                         <ul> 
@@ -190,8 +244,20 @@ export default function Dashboard() {
                                     </div>
                             
                         </div>
-                    </div>
+                    </div> 
                 </form>
         </div>
     )
 }
+/*
+<div className="button">
+    <button class="btn btn-primary" onClick={setHora(sesion.horarios[0].horaInicio.slice(1,5))} type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>{sesion.horarios[0].horaInicio.slice(1,5)}</button>
+</div>
+<div className="button">
+    <button class="btn btn-primary" onClick={setHora(sesion.horarios[0].horaInicio.slice(1,5)+30)} type="button" value="Input" style={{color:'black', backgroundColor:'#e8def8', border:'none'}}>{(sesion.horarios[0].horaInicio).slice(1,3)+30}</button>
+</div>
+
+
+a las {sesion.horarios[0].horaInicio} am
+{cursos.find((e) => e.idCurso == parseInt(curso)).nombre} 
+*/
